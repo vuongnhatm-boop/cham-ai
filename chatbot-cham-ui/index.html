@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHẠM - Trợ Lý Tâm Lý & Tự Điều Chỉnh Học Tập</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css?v=3">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="theme-sage">
+  <!-- APP CONTAINER -->
+  <div class="app-layout">
+    
+    <!-- SIDEBAR: THẺ QUẠT 14 NAN & CÔNG CỤ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <div class="logo-symbol">
+            <i class="fa-solid fa-leaf"></i>
+          </div>
+          <div>
+            <h1 class="logo-title">CHẠM</h1>
+            <p class="logo-subtitle">Chạm để Bứt phá • Tâm an Trí vững</p>
+          </div>
+        </div>
+        <button class="icon-btn close-sidebar-btn" id="closeSidebarBtn" title="Đóng thanh bên">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="school-badge">
+        <i class="fa-solid fa-school"></i>
+        <span>Trường PTDTNT THPT tỉnh Lào Cai</span>
+      </div>
+
+      <!-- Quick interactive tools -->
+      <div class="sidebar-section">
+        <h3 class="section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Hộp Công Cụ Hạ Nhiệt</h3>
+        <div class="quick-tools-grid">
+          <button class="tool-btn" id="openBreathingBtn">
+            <div class="tool-icon sage"><i class="fa-solid fa-wind"></i></div>
+            <div class="tool-info">
+              <strong>Thở 4-7-8</strong>
+              <small>Hạ nhiệt căng thẳng</small>
+            </div>
+          </button>
+          <button class="tool-btn" id="openTimerBtn">
+            <div class="tool-icon orange"><i class="fa-solid fa-stopwatch"></i></div>
+            <div class="tool-info">
+              <strong>Quy tắc 5 Phút</strong>
+              <small>Đánh bay trì hoãn</small>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- 14 NAN THẺ QUẠT -->
+      <div class="sidebar-section fan-deck-section">
+        <div class="section-header-flex">
+          <h3 class="section-title"><i class="fa-solid fa-layer-group"></i> 14 Nan Thẻ Quạt</h3>
+          <span class="badge-tag">Sổ tay bỏ túi</span>
+        </div>
+
+        <div class="fan-tabs">
+          <button class="fan-tab active" data-target="sage-cards">
+            <span class="dot sage-dot"></span> 7 Cánh Xanh (Hạ Nhiệt)
+          </button>
+          <button class="fan-tab" data-target="orange-cards">
+            <span class="dot orange-dot"></span> 7 Cánh Cam (Bứt Phá)
+          </button>
+        </div>
+
+        <!-- 7 Cánh Xanh Sage -->
+        <div class="fan-card-list" id="sage-cards">
+          <div class="fan-card" data-fan="1">
+            <div class="fan-num">01</div>
+            <div class="fan-content">
+              <h4>Bìa CHẠM</h4>
+              <p>Chạm để bứt phá - Điểm tựa thấu cảm học đường.</p>
+            </div>
+          </div>
+          <div class="fan-card" data-fan="2">
+            <div class="fan-num">02</div>
+            <div class="fan-content">
+              <h4>Khi bị điểm kém</h4>
+              <p>3 bước tự tha thứ & khoanh vùng sửa lỗi.</p>
+            </div>
+          </div>
+          <div class="fan-card" data-fan="3">
+            <div class="fan-num">03</div>
+            <div class="fan-content">
+              <h4>Khi quá tải bài vở</h4>
+              <p>Thở 4-7-8 xoa dịu hệ thần kinh giao cảm.</p>
+            </div>
+          </div>
+          <div class="fan-card" data-fan="4">
+            <div class="fan-num">04</div>
+            <div class="fan-content">
+              <h4>Khi tự ti so sánh bạn bè</h4>
+              <p>Tiến bộ 1% mỗi ngày & Tính đồng loại.</p>
+            </div>
+          </div>
+          <div class="fan-card" data-fan="5">
+            <div class="fan-num">05</div>
+            <div class="fan-content">
+              <h4>Mất ngủ trước ngày thi</h4>
+              <p>Body Scan thả lỏng cơ thể 2 phút.</p>
+            </div>
+          </div>
+          <div class="fan-card" data-fan="6">
+            <div class="fan-num">06</div>
+            <div class="fan-content">
+              <h4>Khi suy nghĩ tiêu cực</h4>
+              <p>Đổi vai đối thoại dịu dàng như với bạn thân.</p>
+            </div>
+          </div>
+          <div class="fan-card" data-fan="7">
+            <div class="fan-num">07</div>
+            <div class="fan-content">
+              <h4>Khi kiệt quệ cạn năng lượng</h4>
+              <p>Kỹ thuật Reset 5 phút (nước ấm & nhìn cây xanh).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7 Cánh Cam Đào -->
+        <div class="fan-card-list hidden" id="orange-cards">
+          <div class="fan-card orange" data-fan="8">
+            <div class="fan-num">08</div>
+            <div class="fan-content">
+              <h4>Khi lười biếng, trì hoãn</h4>
+              <p>Quy tắc Khởi động 5 phút (Zeigarnik Effect).</p>
+            </div>
+          </div>
+          <div class="fan-card orange" data-fan="9">
+            <div class="fan-num">09</div>
+            <div class="fan-content">
+              <h4>Khi bài tập quá khó</h4>
+              <p>Kỹ thuật Đọc đảo ngược & Chia nhỏ vi mô.</p>
+            </div>
+          </div>
+          <div class="fan-card orange" data-fan="10">
+            <div class="fan-num">10</div>
+            <div class="fan-content">
+              <h4>Tự kiểm tra hiểu sâu</h4>
+              <p>Kỹ thuật Feynman 2 phút giảng cho bạn khác.</p>
+            </div>
+          </div>
+          <div class="fan-card orange" data-fan="11">
+            <div class="fan-num">11</div>
+            <div class="fan-content">
+              <h4>Chuẩn bị buổi tự học</h4>
+              <p>Mục tiêu Top 3 & Chu kỳ Pomodoro 25/5.</p>
+            </div>
+          </div>
+          <div class="fan-card orange" data-fan="12">
+            <div class="fan-num">12</div>
+            <div class="fan-content">
+              <h4>Khi ngại hỏi bài thầy cô</h4>
+              <p>Công thức 3 bước hỏi bài chủ động thích ứng.</p>
+            </div>
+          </div>
+          <div class="fan-card orange" data-fan="13">
+            <div class="fan-num">13</div>
+            <div class="fan-content">
+              <h4>Chống xao nhãng điện thoại</h4>
+              <p>Hộp cách ly 2 mét & Tờ giấy chờ xử lý.</p>
+            </div>
+          </div>
+          <div class="fan-card orange" data-fan="14">
+            <div class="fan-num">14</div>
+            <div class="fan-content">
+              <h4>Sức mạnh từ "CHƯA"</h4>
+              <p>Tư duy phát triển: Não bộ dày nơ-ron qua thử thách.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOS Footer -->
+      <div class="sidebar-footer">
+        <button class="sos-btn" id="openSosBtn">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <span>Sơ cứu Tâm lý Khẩn cấp (SOS)</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CHAT AREA -->
+    <main class="main-content">
+      <!-- TOP NAVIGATION BAR -->
+      <header class="top-nav">
+        <div class="nav-left">
+          <button class="icon-btn menu-btn" id="toggleSidebarBtn" title="Menu nan thẻ quạt">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="bot-status-wrap">
+            <div class="avatar-ring">
+              <div class="avatar-core">
+                <img src="assets/avatar.jpg" alt="Chatbot CHẠM" class="avatar-img" width="44" height="44" style="width: 44px; height: 44px; max-width: 44px; max-height: 44px; object-fit: cover; border-radius: 50%; display: block;">
+              </div>
+              <span class="status-indicator"></span>
+            </div>
+            <div>
+              <div class="bot-name-row">
+                <h2 class="bot-name">Chatbot CHẠM</h2>
+                <span class="mode-tag" id="currentModeTag">Chế độ 1: Xoa dịu & Tự trắc ẩn</span>
+              </div>
+              <p class="bot-motto">Sẵn sàng lắng nghe bạn 24/7 • Không phán xét</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODE SELECTOR PILLS & AI STATUS -->
+        <div class="nav-right">
+          <div class="firebase-status-pill" id="firebaseStatusPill" title="Máy chủ đám mây Firebase (ai-cham)">
+            <i class="fa-solid fa-cloud"></i>
+            <span id="firebaseStatusText">Firebase: ai-cham</span>
+          </div>
+
+          <div class="ai-status-pill" id="aiStatusPill" title="Gemini AI đã sẵn sàng">
+            <span class="ai-dot-pulse"></span>
+            <span id="aiStatusText">Gemini 3.8 / Flash</span>
+          </div>
+
+          <div class="mode-switch-group">
+            <button class="mode-pill active" id="modeAutoBtn" data-mode="auto" title="Tự động nhận diện nhu cầu">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Tự động</span>
+            </button>
+            <button class="mode-pill" id="modeSageBtn" data-mode="sage" title="Tập trung xoa dịu, hạ nhiệt">
+              <i class="fa-solid fa-leaf"></i>
+              <span>1. Xoa Dịu</span>
+            </button>
+            <button class="mode-pill" id="modeOrangeBtn" data-mode="orange" title="Chiến lược học tập, tư duy phát triển">
+              <i class="fa-solid fa-bolt"></i>
+              <span>2. Bứt Phá</span>
+            </button>
+          </div>
+
+          <a href="admin.html" target="_blank" class="icon-btn" title="Trang quản trị & Thống kê dữ liệu Firebase (Admin Dashboard)">
+            <i class="fa-solid fa-chart-line"></i>
+          </a>
+
+          <button class="icon-btn" id="openApiKeyModalBtn" title="Cài đặt API Key">
+            <i class="fa-solid fa-key"></i>
+          </button>
+
+          <!-- Nút Đăng nhập & Hồ sơ cá nhân học sinh -->
+          <div class="user-auth-wrapper" id="userAuthWrapper">
+            <button class="btn btn-auth" id="openAuthModalBtn" title="Đăng nhập để lưu trữ dữ liệu cá nhân">
+              <i class="fa-regular fa-user"></i>
+              <span>Đăng nhập</span>
+            </button>
+            <div class="user-profile-box hidden" id="userProfileBox">
+              <button class="user-profile-btn" id="userProfileBtn" title="Hồ sơ học sinh">
+                <span class="user-avatar-badge" id="userAvatarText">H</span>
+                <span class="user-display-name" id="userDisplayName">Học sinh</span>
+                <i class="fa-solid fa-angle-down"></i>
+              </button>
+              <div class="user-dropdown-menu hidden" id="userDropdownMenu">
+                <div class="dropdown-user-info">
+                  <strong id="dropdownUserName">Học sinh</strong>
+                  <span id="dropdownUserSub">PTDTNT THPT Lào Cai</span>
+                </div>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item" id="openJournalBtn">
+                  <i class="fa-solid fa-book-bookmark" style="color: var(--sage-600);"></i>
+                  <span>Sổ tay Tự trắc ẩn của tôi</span>
+                </button>
+                <button class="dropdown-item" id="loadCloudHistoryBtn">
+                  <i class="fa-solid fa-clock-rotate-left" style="color: var(--orange-600);"></i>
+                  <span>Tải lại lịch sử trò chuyện</span>
+                </button>
+                <a href="admin.html" target="_blank" class="dropdown-item" style="text-decoration: none; color: inherit;">
+                  <i class="fa-solid fa-chart-pie" style="color: #4A90E2;"></i>
+                  <span>Bảng theo dõi số liệu (Admin)</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item text-danger" id="logoutBtn">
+                  <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                  <span>Đăng xuất</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <button class="icon-btn emergency-top-btn" id="openSosBtnTop" title="Hỗ trợ khẩn cấp">
+            <i class="fa-solid fa-phone-volume"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- CHAT CONVERSATION CONTAINER -->
+      <section class="chat-container" id="chatContainer">
+        
+        <!-- Welcome banner -->
+        <div class="welcome-card" id="welcomeCard">
+          <div class="welcome-header">
+            <div class="welcome-badge">🌿 ĐỒNG HÀNH CÙNG HỌC SINH NỘI TRÚ LÀO CAI</div>
+            <h2>Chào bạn, mình là CHẠM!</h2>
+            <p>
+              Cho dù hôm nay bạn vừa trải qua một bài kiểm tra không như ý, cảm thấy áp lực bài vở ngổn ngang hay đang bế tắc trước một bài tập khó, mình luôn ở đây để cùng bạn gỡ rối từng chút một.
+            </p>
+          </div>
+
+          <div class="quick-scenarios-box">
+            <div class="scenarios-title">
+              <i class="fa-regular fa-comments"></i> Chọn nhanh tình huống bạn đang gặp phải:
+            </div>
+            <div class="scenario-chips">
+              <button class="scenario-chip" data-scenario="1">
+                <i class="fa-regular fa-face-frown"></i>
+                <span>Mình vừa bị điểm kém, tự thấy bản thân thất bại...</span>
+              </button>
+              <button class="scenario-chip" data-scenario="2">
+                <i class="fa-solid fa-battery-quarter"></i>
+                <span>Bài vở nhiều quá, mình kiệt sức và cảm thấy ngợp...</span>
+              </button>
+              <button class="scenario-chip" data-scenario="3">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                <span>Mình bị lười, trì hoãn và cứ dán mắt vào điện thoại...</span>
+              </button>
+              <button class="scenario-chip" data-scenario="4">
+                <i class="fa-solid fa-brain"></i>
+                <span>Bài tập khó quá, mình nghĩ mình không đủ thông minh...</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages stream -->
+        <div class="message-feed" id="messageFeed">
+          <!-- Initial bot greeting -->
+          <div class="message-row bot-row">
+            <div class="msg-avatar">
+              <img src="assets/avatar.jpg" alt="CHẠM" class="bot-avatar-img" width="38" height="38" style="width: 38px; height: 38px; max-width: 38px; max-height: 38px; object-fit: cover; border-radius: 50%; display: block;">
+            </div>
+            <div class="msg-bubble-wrap">
+              <div class="msg-author">CHẠM <span class="msg-time">Vừa xong</span></div>
+              <div class="msg-bubble">
+                <p>Hôm nay ở trường có điều gì khiến bạn băn khoăn hay trăn trở không? Bạn muốn tâm sự xoa dịu cảm xúc, hay đang cần một chiến lược để giải quyết bài vở?</p>
+                <div class="inline-suggestions">
+                  <button class="suggestion-tag" onclick="sendQuickMessage('Mình thấy mệt mỏi và áp lực quá!')">🌿 Mình thấy mệt mỏi và áp lực</button>
+                  <button class="suggestion-tag" onclick="sendQuickMessage('Chỉ cho mình cách học tập trung 25 phút với!')">🚀 Chỉ mình cách học tập trung</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typing indicator placeholder -->
+        <div class="typing-indicator-row hidden" id="typingIndicator">
+          <div class="msg-avatar">
+            <img src="assets/avatar.jpg" alt="CHẠM" class="bot-avatar-img" width="38" height="38" style="width: 38px; height: 38px; max-width: 38px; max-height: 38px; object-fit: cover; border-radius: 50%; display: block;">
+          </div>
+          <div class="typing-bubble">
+            <span class="dot-bounce"></span>
+            <span class="dot-bounce"></span>
+            <span class="dot-bounce"></span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- INPUT BAR -->
+      <footer class="input-panel">
+        <div class="input-container">
+          <button class="input-action-btn" id="openToolsFromInput" title="Xem 14 Nan thẻ quạt">
+            <i class="fa-solid fa-fan"></i>
+          </button>
+          
+          <div class="textarea-wrapper">
+            <textarea 
+              id="userInput" 
+              placeholder="Chia sẻ với CHẠM điều bạn đang nghĩ (ví dụ: 'mình thấy nản quá', 'làm sao nhớ bài lâu?')..."
+              rows="1"></textarea>
+          </div>
+
+          <button class="send-btn" id="sendBtn" title="Gửi tin nhắn">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+        <div class="input-disclaimer">
+          CHẠM luôn bảo mật tâm sự của bạn. Nếu bạn cảm thấy khủng hoảng nghiêm trọng, hãy nhấn nút <strong>SOS Khẩn cấp</strong> góc trên.
+        </div>
+      </footer>
+    </main>
+
+  </div>
+
+  <!-- MODAL 1: BÀI TẬP THỞ 4-7-8 TƯƠNG TÁC -->
+  <div class="modal-overlay hidden" id="breathingModal">
+    <div class="modal-dialog breathing-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <i class="fa-solid fa-wind accent-sage"></i>
+          <h3>Kỹ Thuật Thở 4-7-8 (Dr. Andrew Weil, Harvard)</h3>
+        </div>
+        <button class="modal-close-btn" id="closeBreathingModal">&times;</button>
+      </div>
+
+      <div class="modal-body text-center">
+        <p class="modal-intro">Hạ nhiệt hệ thần kinh, giải tỏa cơn lo âu thi cử và kích hoạt hormone bình an.</p>
+        
+        <div class="breath-visualizer-wrap">
+          <div class="breath-circle" id="breathCircle">
+            <div class="breath-text-wrap">
+              <span class="breath-state" id="breathStateText">SẴN SÀNG</span>
+              <span class="breath-counter" id="breathCounter">--</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="breath-instructions" id="breathInstructions">
+          Nhấn nút "Bắt đầu" bên dưới, ngồi thẳng lưng và thả lỏng hai vai bạn nhé.
+        </div>
+
+        <div class="breath-cycle-indicator">
+          Chu kỳ: <strong id="currentCycleCount">0</strong> / 3
+        </div>
+      </div>
+
+      <div class="modal-footer justify-center">
+        <button class="btn btn-primary sage-bg" id="startBreathingBtn">
+          <i class="fa-solid fa-play"></i> Bắt đầu bài thở (3 chu kỳ)
+        </button>
+        <button class="btn btn-secondary" id="stopBreathingBtn" disabled>
+          <i class="fa-solid fa-stop"></i> Dừng lại
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: BỘ ĐẾM 5 PHÚT KHỞI ĐỘNG (ZEIGARNIK) -->
+  <div class="modal-overlay hidden" id="timerModal">
+    <div class="modal-dialog timer-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <i class="fa-solid fa-stopwatch accent-orange"></i>
+          <h3>Quy Tắc Khởi Động 5 Phút (Phá Sức Ỳ)</h3>
+        </div>
+        <button class="modal-close-btn" id="closeTimerModal">&times;</button>
+      </div>
+
+      <div class="modal-body text-center">
+        <p class="modal-intro">Chỉ cam kết ngồi vào bàn làm đúng 5 phút. Hết 5 phút nếu vẫn chán, bạn được quyền nghỉ. 90% não bộ sẽ tự động tiếp tục học!</p>
+        
+        <div class="timer-display-box">
+          <span class="timer-time" id="timerDisplay">05:00</span>
+          <div class="timer-target">Nhiệm vụ: Làm đúng 1 bài tập hoặc đọc 1 trang sách</div>
+        </div>
+
+        <div class="timer-rules-tip">
+          <i class="fa-solid fa-circle-check"></i> Hãy để điện thoại cách xa bàn ít nhất 2 mét trước khi bấm nút!
+        </div>
+      </div>
+
+      <div class="modal-footer justify-center">
+        <button class="btn btn-primary orange-bg" id="startTimerBtn">
+          <i class="fa-solid fa-play"></i> Bắt đầu 5 phút ngay
+        </button>
+        <button class="btn btn-secondary" id="resetTimerBtn">
+          <i class="fa-solid fa-rotate-right"></i> Đặt lại
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: CHI TIẾT NAN THẺ QUẠT -->
+  <div class="modal-overlay hidden" id="fanDetailModal">
+    <div class="modal-dialog fan-detail-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="fan-badge-num" id="modalFanNum">Nan 02</span>
+          <h3 id="modalFanTitle">Khi bị điểm kém</h3>
+        </div>
+        <button class="modal-close-btn" id="closeFanModal">&times;</button>
+      </div>
+
+      <div class="modal-body" id="modalFanBody">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="fanModalPrevBtn"><i class="fa-solid fa-arrow-left"></i> Nan trước</button>
+        <button class="btn btn-primary" id="fanModalNextBtn">Nan tiếp <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: SƠ CỨU TÂM LÝ KHẨN CẤP (WHO PFA) -->
+  <div class="modal-overlay hidden" id="sosModal">
+    <div class="modal-dialog sos-dialog">
+      <div class="modal-header sos-header">
+        <div class="modal-title-group">
+          <i class="fa-solid fa-shield-heart"></i>
+          <h3>Sơ Cứu Tâm Lý Khẩn Cấp (PFA)</h3>
+        </div>
+        <button class="modal-close-btn" id="closeSosModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="sos-empathy-alert">
+          <p><strong>Bạn ơi, bạn không hề đơn độc!</strong></p>
+          <p>Dù có bất kỳ chuyện khó khăn nào đang xảy ra, cuộc sống và giá trị của bạn luôn là điều vô cùng quý giá. Mọi cảm xúc nặng nề này đều có thể được xoa dịu khi bạn chia sẻ cùng người đáng tin cậy.</p>
+        </div>
+
+        <h4 class="sos-contacts-title">Đường dây nóng hỗ trợ 24/7 (Hoàn toàn miễn phí):</h4>
+        
+        <div class="contact-card">
+          <div class="contact-icon phone-pulse"><i class="fa-solid fa-phone"></i></div>
+          <div class="contact-info">
+            <strong>Tổng đài Quốc gia Bảo vệ Trẻ em: 111</strong>
+            <p>Hỗ trợ tư vấn tâm lý miễn phí 24/7 trên toàn quốc.</p>
+          </div>
+          <a href="tel:111" class="call-btn">Gọi 111</a>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-icon heart"><i class="fa-solid fa-heart"></i></div>
+          <div class="contact-info">
+            <strong>Đường dây nóng Ngày Mai: 096 306 1414</strong>
+            <p>Tham vấn & hỗ trợ người gặp khủng hoảng tâm lý, trầm cảm.</p>
+          </div>
+          <a href="tel:0963061414" class="call-btn">Gọi ngay</a>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-icon school"><i class="fa-solid fa-school"></i></div>
+          <div class="contact-info">
+            <strong>Phòng Tư vấn Tâm lý học đường</strong>
+            <p>Trường PTDTNT THPT tỉnh Lào Cai (Trực tiếp tại trường hoặc liên hệ giáo viên chủ nhiệm).</p>
+          </div>
+        </div>
+
+        <div class="quick-action-grounding">
+          <strong>🌿 Ngay lúc này, hãy thử kỹ thuật Nối đất 5-4-3-2-1:</strong>
+          <ul>
+            <li>Tìm <strong>5</strong> đồ vật quanh phòng bạn nhìn thấy</li>
+            <li>Chạm vào <strong>4</strong> bề mặt (bàn, áo, sàn...)</li>
+            <li>Lắng nghe <strong>3</strong> âm thanh xung quanh</li>
+            <li>Cảm nhận <strong>2</strong> mùi hương</li>
+            <li>Uống <strong>1</strong> ngụm nước ấm nhỏ</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="modal-footer justify-center">
+        <button class="btn btn-primary sage-bg" id="closeSosActionBtn">Mình đã hiểu và cảm thấy an tâm hơn</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: CÀI ĐẶT GOOGLE GEMINI API KEY -->
+  <div class="modal-overlay hidden" id="apiKeyModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <i class="fa-solid fa-key" style="color: #4A69BD;"></i>
+          <h3>Google Gemini API Key</h3>
+        </div>
+        <button class="modal-close-btn" id="closeApiKeyModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-intro">Khóa API của bạn dùng để kết nối trực tiếp với mô hình ngôn ngữ lớn Google Gemini, được huấn luyện theo tri thức của Chatbot CHẠM.</p>
+        
+        <div style="margin-bottom: 16px;">
+          <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px; color:var(--text-primary);">Gemini API Key hiện tại:</label>
+          <input type="password" id="apiKeyInput" style="width:100%; padding:10px 12px; border:1px solid var(--border-light); border-radius:var(--radius-sm); font-size:13px; font-family:monospace;" placeholder="Dán API Key tại đây...">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+            <span style="font-size:11px; color:var(--sage-600); font-weight:600;"><i class="fa-solid fa-circle-check"></i> Đang hoạt động bình thường</span>
+            <button type="button" id="toggleShowKeyBtn" style="background:none; border:none; font-size:11.5px; color:var(--text-secondary); cursor:pointer;">Hiện / Ẩn Key</button>
+          </div>
+        </div>
+
+        <div style="background:var(--sage-50); padding:12px; border-radius:var(--radius-sm); font-size:12px; color:var(--text-secondary);">
+          <strong>💡 Huấn luyện chuyên sâu tích hợp:</strong>
+          <ul style="margin:6px 0 0 16px;">
+            <li>Chương 1: Lòng tự trắc ẩn (Neff), CFT (Gilbert), 7 Méo mó CBT, Thở 4-7-8, WHO PFA.</li>
+            <li>Chương 2: Tư duy phát triển (Dweck), Tự điều chỉnh SRL (Zimmerman), 10 kỹ thuật Dunlosky.</li>
+            <li>Chương 4: 14 nan thẻ quạt "Chạm để Bứt phá" (7 Xanh Sage + 7 Cam Đào).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="modal-footer justify-center">
+        <button class="btn btn-primary sage-bg" id="saveApiKeyBtn">Lưu & Kết Nối Lại</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6: ĐĂNG NHẬP / ĐĂNG KÝ HỌC SINH -->
+  <div class="modal-overlay hidden" id="authModal">
+    <div class="modal-dialog auth-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <i class="fa-solid fa-user-shield accent-sage"></i>
+          <h3>Tài Khoản Học Sinh • CHẠM</h3>
+        </div>
+        <button class="modal-close-btn" id="closeAuthModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tabSignInBtn" data-target="signinForm">Đăng nhập</button>
+          <button class="auth-tab" id="tabSignUpBtn" data-target="signupForm">Đăng ký mới</button>
+        </div>
+
+        <!-- Alert messages -->
+        <div class="auth-alert hidden" id="authAlert"></div>
+
+        <!-- FORM 1: ĐĂNG NHẬP -->
+        <form id="signinForm" class="auth-form-panel">
+          <div class="form-group">
+            <label for="signinEmail"><i class="fa-regular fa-envelope"></i> Email học sinh:</label>
+            <input type="email" id="signinEmail" placeholder="ví dụ: hocsinh@gmail.com" required autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="signinPassword"><i class="fa-solid fa-lock"></i> Mật khẩu:</label>
+            <input type="password" id="signinPassword" placeholder="Nhập mật khẩu..." required autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-primary sage-bg btn-block" id="submitSignInBtn">
+            <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập vào CHẠM
+          </button>
+        </form>
+
+        <!-- FORM 2: ĐĂNG KÝ -->
+        <form id="signupForm" class="auth-form-panel hidden">
+          <div class="form-group">
+            <label for="signupName"><i class="fa-regular fa-id-badge"></i> Họ và tên học sinh:</label>
+            <input type="text" id="signupName" placeholder="ví dụ: Vàng Thị Hoa, Lò Văn Nam..." required>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="signupClass"><i class="fa-solid fa-graduation-cap"></i> Lớp:</label>
+              <input type="text" id="signupClass" placeholder="ví dụ: 10A1, 11A2..." required>
+            </div>
+            <div class="form-group">
+              <label><i class="fa-solid fa-school"></i> Trường:</label>
+              <input type="text" value="PTDTNT Lào Cai" disabled style="background:#F1F5F9; color:#64748B;">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="signupEmail"><i class="fa-regular fa-envelope"></i> Email cá nhân:</label>
+            <input type="email" id="signupEmail" placeholder="Nhập email của bạn..." required autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="signupPassword"><i class="fa-solid fa-lock"></i> Mật khẩu (tối thiểu 6 ký tự):</label>
+            <input type="password" id="signupPassword" placeholder="Tạo mật khẩu..." required minlength="6" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn-primary orange-bg btn-block" id="submitSignUpBtn">
+            <i class="fa-solid fa-user-plus"></i> Tạo tài khoản học sinh
+          </button>
+        </form>
+
+        <div class="auth-divider">
+          <span>HOẶC TIẾP TỤC BẰNG</span>
+        </div>
+
+        <div class="quick-auth-options">
+          <button type="button" class="btn-social google-btn" id="googleSignInBtn">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18" height="18">
+            <span>Đăng nhập nhanh với Google</span>
+          </button>
+          
+          <button type="button" class="btn-social guest-btn" id="guestSignInBtn" title="Không cần tài khoản, tâm sự giấu tên">
+            <i class="fa-solid fa-user-secret"></i>
+            <span>Tâm sự Ẩn danh (Bảo mật tuyệt đối)</span>
+          </button>
+        </div>
+
+        <div class="auth-note-privacy">
+          <i class="fa-solid fa-shield-halved"></i> Dữ liệu tâm lý & lịch sử trò chuyện được mã hóa bảo mật riêng biệt cho từng học sinh.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 7: SỔ TAY TỰ TRẮC ẨN & NHẬT KÝ RÈN LUYỆN (SELF-COMPASSION JOURNAL) -->
+  <div class="modal-overlay hidden" id="journalModal">
+    <div class="modal-dialog journal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <i class="fa-solid fa-book-bookmark accent-sage"></i>
+          <h3>Sổ Tay Tự Trắc Ẩn Cá Nhân</h3>
+        </div>
+        <button class="modal-close-btn" id="closeJournalModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="journal-stats-banner">
+          <div class="journal-stat-card">
+            <i class="fa-solid fa-pen-fancy"></i>
+            <div>
+              <strong id="statJournalCount">0</strong>
+              <small>Bài nhật ký</small>
+            </div>
+          </div>
+          <div class="journal-stat-card">
+            <i class="fa-solid fa-wind" style="color:var(--sage-600);"></i>
+            <div>
+              <strong id="statBreathCount">0</strong>
+              <small>Lần thở 4-7-8</small>
+            </div>
+          </div>
+          <div class="journal-stat-card">
+            <i class="fa-solid fa-stopwatch" style="color:var(--orange-600);"></i>
+            <div>
+              <strong id="statTimerCount">0</strong>
+              <small>Lần học 5 phút</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORM VIẾT NHẬT KÝ MỚI -->
+        <div class="journal-composer-box">
+          <h4 class="composer-title"><i class="fa-solid fa-plus-circle"></i> Viết Nhật Ký Tự Trắc Ẩn Hôm Nay (3 Bước Neff)</h4>
+          <form id="newJournalForm">
+            <div class="form-group">
+              <label>1. Chánh niệm: Sự cố hoặc áp lực khó khăn hôm nay của bạn là gì?</label>
+              <textarea id="journalEvent" rows="2" placeholder="Ví dụ: Hôm nay bị điểm 4 bài kiểm tra Sinh, cảm thấy buồn và áp lực..." required></textarea>
+            </div>
+            <div class="form-group">
+              <label>2. Tính đồng loại: Nhắc nhở bản thân rằng khó khăn này là một phần tự nhiên:</label>
+              <textarea id="journalCommonHumanity" rows="2" placeholder="Ví dụ: Ai cũng có lúc vấp ngã và bị điểm kém, rất nhiều bạn khác cũng từng trải qua điều này..." required></textarea>
+            </div>
+            <div class="form-group">
+              <label>3. Lòng tốt: Lời nói dịu dàng và khích lệ bạn muốn gửi cho chính mình:</label>
+              <textarea id="journalSelfKindness" rows="2" placeholder="Ví dụ: Mình đã cố gắng rồi. Ngày mai mình sẽ hỏi thầy cô để chữa lại bài, kiên nhẫn với chính mình..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary sage-bg" id="saveJournalEntryBtn">
+              <i class="fa-solid fa-floppy-disk"></i> Lưu vào Sổ tay Đám mây
+            </button>
+          </form>
+        </div>
+
+        <!-- DANH SÁCH BÀI NHẬT KÝ ĐÃ LƯU -->
+        <div class="journal-entries-section">
+          <h4 class="composer-title"><i class="fa-solid fa-clock-rotate-left"></i> Các bài nhật ký đã lưu của bạn:</h4>
+          <div class="journal-entries-list" id="journalEntriesList">
+            <div class="empty-journal-hint">Chưa có bài nhật ký nào. Hãy viết bài đầu tiên ở trên nhé!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Google Firebase SDKs (v10 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <!-- Scripts ứng dụng CHẠM -->
+  <script src="js/firebase-service.js"></script>
+  <script src="js/knowledge-base.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
