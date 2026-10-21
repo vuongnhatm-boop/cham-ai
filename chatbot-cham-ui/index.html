@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="icon" type="image/jpeg" href="assets/avatar.jpg?v=6">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body class="theme-sage">
@@ -19,9 +20,7 @@
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div class="logo-box">
-          <div class="logo-symbol">
-            <i class="fa-solid fa-leaf"></i>
-          </div>
+          <img src="assets/logo.jpg?v=5" alt="CHẠM Logo" class="logo-img" width="44" height="44" style="width: 44px; height: 44px; max-width: 44px; max-height: 44px; object-fit: cover; border-radius: 12px; display: block; border: 1.5px solid var(--sage-200); box-shadow: var(--shadow-sm);">
           <div>
             <h1 class="logo-title">CHẠM</h1>
             <p class="logo-subtitle">Chạm để Bứt phá • Tâm an Trí vững</p>
@@ -37,8 +36,31 @@
         <span>Trường PTDTNT THPT tỉnh Lào Cai</span>
       </div>
 
-      <!-- Quick interactive tools -->
-      <div class="sidebar-section">
+      <!-- NÚT BẮT ĐẦU CHAT MỚI -->
+      <div class="sidebar-new-chat-wrap">
+        <button class="btn-new-chat" id="startNewChatBtn">
+          <i class="fa-solid fa-plus"></i>
+          <span>Cuộc trò chuyện mới</span>
+        </button>
+      </div>
+
+      <!-- CHUYỂN ĐỔI TAB THANH BÊN: 14 NAN THẺ QUẠT VS LỊCH SỬ CHAT -->
+      <div class="sidebar-main-tabs">
+        <button class="sidebar-main-tab active" id="tabFanDeckBtn" data-target="fanDeckView">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>14 Nan Thẻ Quạt</span>
+        </button>
+        <button class="sidebar-main-tab" id="tabChatHistoryBtn" data-target="chatHistoryView">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>Lịch Sử Chat</span>
+          <span class="history-count-badge" id="historyCountBadge">0</span>
+        </button>
+      </div>
+
+      <!-- VIEW 1: 14 NAN THẺ QUẠT & CÔNG CỤ HẠ NHIỆT -->
+      <div id="fanDeckView" class="sidebar-view-panel">
+        <!-- Quick interactive tools -->
+        <div class="sidebar-section">
         <h3 class="section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Hộp Công Cụ Hạ Nhiệt</h3>
         <div class="quick-tools-grid">
           <button class="tool-btn" id="openBreathingBtn">
@@ -180,6 +202,29 @@
           </div>
         </div>
       </div>
+    </div>
+    <!-- HẾT VIEW 1: 14 NAN THẺ QUẠT -->
+
+      <!-- VIEW 2: LỊCH SỬ CHAT VỚI AI CHẠM (ĐỒNG BỘ CLOUD FIREBASE) -->
+      <div id="chatHistoryView" class="sidebar-view-panel hidden">
+        <div class="history-panel-header">
+          <div class="history-sync-indicator" id="historySyncIndicator">
+            <i class="fa-solid fa-cloud"></i>
+            <span id="historySyncText">Firebase Cloud</span>
+          </div>
+          <button class="icon-btn-sm" id="clearAllHistoryBtn" title="Xóa toàn bộ lịch sử trò chuyện">
+            <i class="fa-regular fa-trash-can"></i>
+          </button>
+        </div>
+        <div class="chat-history-list" id="chatHistoryList">
+          <!-- Các đoạn chat được tải và hiển thị tự động -->
+          <div class="history-empty-state" id="historyEmptyState">
+            <i class="fa-regular fa-comments"></i>
+            <p>Chưa có cuộc trò chuyện nào.<br>Hãy bắt đầu tâm sự với CHẠM nhé!</p>
+          </div>
+        </div>
+      </div>
+      <!-- HẾT VIEW 2: LỊCH SỬ CHAT -->
 
       <!-- SOS Footer -->
       <div class="sidebar-footer">
@@ -195,13 +240,17 @@
       <!-- TOP NAVIGATION BAR -->
       <header class="top-nav">
         <div class="nav-left">
-          <button class="icon-btn menu-btn" id="toggleSidebarBtn" title="Menu nan thẻ quạt">
+          <button class="icon-btn menu-btn" id="toggleSidebarBtn" title="Menu nan thẻ quạt & Lịch sử chat">
             <i class="fa-solid fa-bars"></i>
+          </button>
+          <button class="btn-top-new-chat" id="topNewChatBtn" title="Bắt đầu cuộc trò chuyện mới">
+            <i class="fa-solid fa-plus"></i>
+            <span>Chat mới</span>
           </button>
           <div class="bot-status-wrap">
             <div class="avatar-ring">
               <div class="avatar-core">
-                <img src="assets/avatar.jpg" alt="Chatbot CHẠM" class="avatar-img" width="44" height="44" style="width: 44px; height: 44px; max-width: 44px; max-height: 44px; object-fit: cover; border-radius: 50%; display: block;">
+                <img src="assets/avatar.jpg?v=6" alt="Chatbot CHẠM" class="avatar-img" width="44" height="44" style="width: 44px; height: 44px; max-width: 44px; max-height: 44px; object-fit: cover; border-radius: 50%; display: block;">
               </div>
               <span class="status-indicator"></span>
             </div>
@@ -215,18 +264,8 @@
           </div>
         </div>
 
-        <!-- MODE SELECTOR PILLS & AI STATUS -->
+        <!-- MODE SELECTOR PILLS -->
         <div class="nav-right">
-          <div class="firebase-status-pill" id="firebaseStatusPill" title="Máy chủ đám mây Firebase (ai-cham)">
-            <i class="fa-solid fa-cloud"></i>
-            <span id="firebaseStatusText">Firebase: ai-cham</span>
-          </div>
-
-          <div class="ai-status-pill" id="aiStatusPill" title="Gemini AI đã sẵn sàng">
-            <span class="ai-dot-pulse"></span>
-            <span id="aiStatusText">Gemini 3.8 / Flash</span>
-          </div>
-
           <div class="mode-switch-group">
             <button class="mode-pill active" id="modeAutoBtn" data-mode="auto" title="Tự động nhận diện nhu cầu">
               <i class="fa-solid fa-wand-magic-sparkles"></i>
@@ -241,11 +280,7 @@
               <span>2. Bứt Phá</span>
             </button>
           </div>
-
-          <a href="admin.html" target="_blank" class="icon-btn" title="Trang quản trị & Thống kê dữ liệu Firebase (Admin Dashboard)">
-            <i class="fa-solid fa-chart-line"></i>
-          </a>
-
+          
           <button class="icon-btn" id="openApiKeyModalBtn" title="Cài đặt API Key">
             <i class="fa-solid fa-key"></i>
           </button>
@@ -276,10 +311,6 @@
                   <i class="fa-solid fa-clock-rotate-left" style="color: var(--orange-600);"></i>
                   <span>Tải lại lịch sử trò chuyện</span>
                 </button>
-                <a href="admin.html" target="_blank" class="dropdown-item" style="text-decoration: none; color: inherit;">
-                  <i class="fa-solid fa-chart-pie" style="color: #4A90E2;"></i>
-                  <span>Bảng theo dõi số liệu (Admin)</span>
-                </a>
                 <div class="dropdown-divider"></div>
                 <button class="dropdown-item text-danger" id="logoutBtn">
                   <i class="fa-solid fa-arrow-right-from-bracket"></i>
@@ -298,6 +329,16 @@
       <!-- CHAT CONVERSATION CONTAINER -->
       <section class="chat-container" id="chatContainer">
         
+        <!-- Broadcast banner from School / Admin (chỉ hiện khi quản trị viên đăng thông báo) -->
+        <div class="school-broadcast-card hidden" id="schoolBroadcastCard">
+          <div class="broadcast-icon"><i class="fa-solid fa-bullhorn"></i></div>
+          <div class="broadcast-body">
+            <strong>Thông điệp từ Thầy Cô & Quản trị viên:</strong>
+            <p id="schoolBroadcastText"></p>
+          </div>
+          <button class="broadcast-close-btn" id="closeBroadcastBannerBtn" title="Đóng thông báo"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
         <!-- Welcome banner -->
         <div class="welcome-card" id="welcomeCard">
           <div class="welcome-header">
@@ -338,7 +379,7 @@
           <!-- Initial bot greeting -->
           <div class="message-row bot-row">
             <div class="msg-avatar">
-              <img src="assets/avatar.jpg" alt="CHẠM" class="bot-avatar-img" width="38" height="38" style="width: 38px; height: 38px; max-width: 38px; max-height: 38px; object-fit: cover; border-radius: 50%; display: block;">
+              <img src="assets/avatar.jpg?v=6" alt="CHẠM" class="bot-avatar-img" width="38" height="38" style="width: 38px; height: 38px; max-width: 38px; max-height: 38px; object-fit: cover; border-radius: 50%; display: block;">
             </div>
             <div class="msg-bubble-wrap">
               <div class="msg-author">CHẠM <span class="msg-time">Vừa xong</span></div>
@@ -356,7 +397,7 @@
         <!-- Typing indicator placeholder -->
         <div class="typing-indicator-row hidden" id="typingIndicator">
           <div class="msg-avatar">
-            <img src="assets/avatar.jpg" alt="CHẠM" class="bot-avatar-img" width="38" height="38" style="width: 38px; height: 38px; max-width: 38px; max-height: 38px; object-fit: cover; border-radius: 50%; display: block;">
+            <img src="assets/avatar.jpg?v=6" alt="CHẠM" class="bot-avatar-img" width="38" height="38" style="width: 38px; height: 38px; max-width: 38px; max-height: 38px; object-fit: cover; border-radius: 50%; display: block;">
           </div>
           <div class="typing-bubble">
             <span class="dot-bounce"></span>
@@ -568,13 +609,18 @@
       </div>
 
       <div class="modal-body">
-        <p class="modal-intro">Khóa API của bạn dùng để kết nối trực tiếp với mô hình ngôn ngữ lớn Google Gemini, được huấn luyện theo tri thức của Chatbot CHẠM.</p>
+        <p class="modal-intro">Khóa API dùng để kết nối trực tiếp với mô hình AI Google Gemini thông minh thế hệ mới, trò chuyện tự nhiên và giải đáp mọi câu hỏi của học sinh.</p>
         
+        <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 14px; font-size: 12px; color: #1E40AF;">
+          <i class="fa-solid fa-circle-info"></i> <strong>Chưa có API Key?</strong> 
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #2563EB; font-weight: 700; text-decoration: underline; margin-left: 4px;">Nhấp vào đây để lấy Gemini API Key miễn phí</a> (Đăng nhập bằng tài khoản Google bất kỳ, bấm <em>Get API key</em>).
+        </div>
+
         <div style="margin-bottom: 16px;">
-          <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px; color:var(--text-primary);">Gemini API Key hiện tại:</label>
-          <input type="password" id="apiKeyInput" style="width:100%; padding:10px 12px; border:1px solid var(--border-light); border-radius:var(--radius-sm); font-size:13px; font-family:monospace;" placeholder="Dán API Key tại đây...">
+          <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px; color:var(--text-primary);">Gemini API Key của bạn:</label>
+          <input type="password" id="apiKeyInput" style="width:100%; padding:10px 12px; border:1px solid var(--border-light); border-radius:var(--radius-sm); font-size:13px; font-family:monospace;" placeholder="Dán API Key (bắt đầu bằng AIzaSy...) vào đây">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
-            <span style="font-size:11px; color:var(--sage-600); font-weight:600;"><i class="fa-solid fa-circle-check"></i> Đang hoạt động bình thường</span>
+            <span style="font-size:11px; color:var(--sage-600); font-weight:600;"><i class="fa-solid fa-shield-halved"></i> Key được lưu an toàn trên trình duyệt của bạn</span>
             <button type="button" id="toggleShowKeyBtn" style="background:none; border:none; font-size:11.5px; color:var(--text-secondary); cursor:pointer;">Hiện / Ẩn Key</button>
           </div>
         </div>
