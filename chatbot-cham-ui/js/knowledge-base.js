@@ -264,94 +264,156 @@ window.fanCardsData = {
   }
 };
 
-// 3. FALLBACK ENGINE XỬ LÝ OFFLINE THEO CÂY QUYẾT ĐỊNH
+// 3. FALLBACK ENGINE XỬ LÝ THEO CÂY QUYẾT ĐỊNH TRI THỨC CHẠM
 window.getLocalFallbackResponse = function(text, currentOperatingMode) {
   const lower = text.toLowerCase();
 
-  // Dấu hiệu tự hại -> WHO PFA
-  if (lower.includes('chết') || lower.includes('tự tử') || lower.includes('không muốn sống') || lower.includes('biến mất') || lower.includes('tự hại')) {
+  // 1. Dấu hiệu khủng hoảng tự hại -> WHO PFA
+  if (lower.includes('chết') || lower.includes('tự tử') || lower.includes('không muốn sống') || lower.includes('biến mất') || lower.includes('tự hại') || lower.includes('kết thúc')) {
     return {
       isEmergency: true,
       mode: 'sage',
       tag: 'Hỗ Trợ Khẩn Cấp (PFA)',
-      response: `
-        <p><strong>Bạn ơi, mình ở đây bên bạn!</strong></p>
-        <p>Mình cảm nhận được bạn đang phải chịu đựng những nỗi đau và áp lực vô cùng nặng nề. Nhưng xin bạn hãy nhớ rằng: <strong>Bạn và sự tồn tại của bạn là điều vô cùng quý giá</strong>.</p>
-        <p>Mọi khủng hoảng đều có cách để vượt qua khi chúng ta không phải gánh vác nó một mình. Mình vừa mở cửa sổ <strong>Sơ cứu Tâm lý Khẩn cấp</strong> trên màn hình. Xin bạn hãy liên hệ ngay với Tổng đài <strong>111</strong> hoặc thầy cô phòng tư vấn tâm lý trường Lào Cai để có người lắng nghe và chở che cho bạn ngay lúc này nhé!</p>
-      `
+      response: `**Bạn ơi, mình luôn ở đây bên bạn!**\n\nMình cảm nhận được bạn đang phải chịu đựng những nỗi đau và áp lực vô cùng nặng nề. Nhưng xin bạn hãy nhớ rằng: **Bạn và sự tồn tại của bạn là điều vô cùng quý giá**.\n\nMọi khủng hoảng đều có cách để vượt qua khi chúng ta không phải gánh vác nó một mình. Mình vừa mở cửa sổ **Sơ cứu Tâm lý Khẩn cấp** trên màn hình. Xin bạn hãy liên hệ ngay với Tổng đài **111** hoặc thầy cô phòng tư vấn tâm lý trường Lào Cai để có người lắng nghe và che chở cho bạn ngay lúc này nhé!`
     };
   }
 
-  if (lower.includes('điểm kém') || lower.includes('điểm thấp') || lower.includes('thi trượt') || lower.includes('thất bại') || lower.includes('bị điểm') || lower.includes('thất vọng')) {
+  // 2. Chào hỏi & Làm quen
+  if (lower.includes('chào') || lower.includes('hello') || lower.includes('hi ') || lower === 'hi' || lower.includes('alo') || lower.includes('bạn là ai') || lower.includes('chạm là gì')) {
+    return {
+      mode: 'sage',
+      tag: 'Trợ Lý CHẠM • Xin Chào',
+      response: `Chào bạn! Mình là **CHẠM** - Trợ lý Tâm lý học đường & Tự điều chỉnh học tập dành riêng cho học sinh trường PTDTNT THPT tỉnh Lào Cai.\n\nMình ở đây để lắng nghe bạn 24/7 không phán xét. Bạn có thể chọn:\n* 🌿 **Chế độ 1 (Xoa dịu):** Khi bạn mệt mỏi, điểm kém, mất ngủ, cần xoa dịu cảm xúc.\n* 🚀 **Chế độ 2 (Bứt phá):** Khi bạn cần phương pháp học tập trung, vượt qua trì hoãn, làm bài khó.\n\nHôm nay bạn đang cảm thấy thế nào? Hãy chia sẻ cùng mình nhé!`
+    };
+  }
+
+  // 3. Điểm kém / Thi trượt / Thất bại
+  if (lower.includes('điểm kém') || lower.includes('điểm thấp') || lower.includes('thi trượt') || lower.includes('thất bại') || lower.includes('bị điểm') || lower.includes('kết quả kém') || lower.includes('làm sai')) {
     return {
       mode: 'sage',
       tag: 'Xoa Dịu & Tự Trắc Ẩn',
-      response: `
-        <p>Mình hiểu bạn đang rất buồn, nhưng <strong>điểm số một bài thi không định nghĩa giá trị con người bạn đâu</strong>.</p>
-        <p>🌿 Hãy đặt tay lên ngực, hít thở sâu một nhịp và tự nhủ: <em>"Mình đã cố gắng rồi, mình sẽ cho bản thân cơ hội làm lại."</em> Giờ chúng mình cùng tập bài thở hạ nhiệt hay xem cách khoanh vùng lỗi sai nhé?</p>
-        <div class="msg-actions-row">
-          <button class="msg-action-btn" onclick="openFanDetail(2)"><i class="fa-solid fa-leaf"></i> Nan 02: 3 Bước tự tha thứ</button>
-          <button class="msg-action-btn" onclick="openBreathingModal()"><i class="fa-solid fa-wind"></i> Thở 4-7-8 hạ nhiệt</button>
-        </div>
-      `
+      response: `Mình hiểu bạn đang rất buồn và thất vọng, nhưng **điểm số của một bài thi không bao giờ định nghĩa giá trị con người bạn đâu**.\n\n🌿 Hãy đặt tay lên ngực, hít thở sâu một nhịp và nhớ đến **Nan 02: 3 Bước tự tha thứ**:\n1. Thừa nhận cảm xúc buồn bã của mình, không kìm nén.\n2. Tự nhủ ai cũng từng có lúc làm sai, đây là cơ hội học hỏi.\n3. Khoanh vùng đúng dạng bài bị mất điểm để sửa lỗi.\n\nGiờ chúng mình cùng tập bài Thở 4-7-8 để hạ nhiệt hay mở Nan 02 xem hướng dẫn chi tiết nhé?`
     };
   }
 
-  if (lower.includes('quá tải') || lower.includes('kiệt sức') || lower.includes('áp lực') || lower.includes('mệt mỏi') || lower.includes('stress') || lower.includes('ngợp') || lower.includes('bài tập nhiều')) {
+  // 4. Quá tải / Áp lực / Căng thẳng / Stress
+  if (lower.includes('quá tải') || lower.includes('kiệt sức') || lower.includes('áp lực') || lower.includes('mệt mỏi') || lower.includes('stress') || lower.includes('ngợp') || lower.includes('căng thẳng') || lower.includes('nhiều bài')) {
     return {
       mode: 'sage',
       tag: 'Xoa Dịu & Quản Lý Năng Lượng',
-      response: `
-        <p>Bài vở nhiều môn dồn lại ở trường nội trú dễ làm bạn bị ngợp. Lúc này, <strong>cố ép bản thân học thêm chỉ làm não bộ thêm tê liệt</strong>.</p>
-        <p>🌿 Hãy dừng bút 3 phút để thở 4-7-8, sau đó tối nay chỉ chọn đúng <strong>2 môn cốt lõi</strong> cần nộp ngày mai để giải quyết dứt điểm thôi nhé!</p>
-        <div class="msg-actions-row">
-          <button class="msg-action-btn" onclick="openBreathingModal()"><i class="fa-solid fa-wind"></i> Thở 4-7-8 ngay</button>
-          <button class="msg-action-btn orange-act" onclick="openFanDetail(11)"><i class="fa-solid fa-list-check"></i> Nan 11: Top 3 việc cốt lõi</button>
-        </div>
-      `
+      response: `Bài vở nhiều môn dồn lại ở trường nội trú rất dễ làm bạn bị ngợp. Lúc này, **cố ép bản thân học tiếp chỉ làm não bộ thêm tê liệt**.\n\n🌿 Bạn hãy dừng bút 3 phút để Thở 4-7-8 xoa dịu hệ thần kinh giao cảm. Sau đó, áp dụng **Nan 11: Top 3 & Pomodoro**: Tối nay chỉ chọn đúng 2-3 bài tập cốt lõi cần nộp ngày mai để giải quyết dứt điểm, không ôm đồm tất cả nhé!`
     };
   }
 
-  if (lower.includes('lười') || lower.includes('trì hoãn') || lower.includes('điện thoại') || lower.includes('lướt web') || lower.includes('không muốn học') || lower.includes('sức ỳ')) {
+  // 5. Lười biếng / Trì hoãn / Thiếu động lực
+  if (lower.includes('lười') || lower.includes('trì hoãn') || lower.includes('ngại học') || lower.includes('không muốn học') || lower.includes('sức ỳ') || lower.includes('chán nản') || lower.includes('mất động lực')) {
     return {
       mode: 'orange',
       tag: 'Tự Điều Chỉnh & Phá Sức Ỳ',
-      response: `
-        <p>Đừng vội dán nhãn mình là lười biếng, não bộ chúng ta chỉ đang ngại bắt đầu thôi!</p>
-        <p>🚀 Áp dụng <strong>Quy tắc 5 phút</strong>: Để điện thoại cách xa 2 mét, cam kết làm đúng 1 bài tập trong 5 phút. Hết 5 phút nếu vẫn chán, bạn được phép nghỉ. Bắt đầu bấm giờ cùng mình nhé?</p>
-        <div class="msg-actions-row">
-          <button class="msg-action-btn orange-act" onclick="openTimerModal()"><i class="fa-solid fa-play"></i> Bật đếm 5 phút ngay</button>
-          <button class="msg-action-btn" onclick="openFanDetail(13)"><i class="fa-solid fa-box-archive"></i> Nan 13: Hộp cách ly 2m</button>
-        </div>
-      `
+      response: `Đừng vội tự trách mình là lười biếng, não bộ chúng ta chỉ đang ngại cảm giác bắt đầu thôi!\n\n🚀 Hãy thử ngay **Nan 08: Quy tắc 5 phút (Hiệu ứng Zeigarnik)**: Để điện thoại cách xa 2m, tự hứa chỉ ngồi vào bàn làm đúng 1 bài tập trong 5 phút. Hết 5 phút nếu vẫn thấy chán, bạn hoàn toàn được phép nghỉ.\n\n*Thực tế là 90% bộ não sau khi bắt đầu 5 phút sẽ có quán tính làm tiếp cho đến khi xong bài đấy! Bật hẹn giờ 5 phút cùng mình nhé?*`
     };
   }
 
-  if (lower.includes('bài khó') || lower.includes('không làm được') || lower.includes('bế tắc') || lower.includes('muốn bỏ cuộc') || lower.includes('dốt') || lower.includes('kém cỏi') || lower.includes('chưa hiểu')) {
+  // 6. Bài tập quá khó / Bế tắc
+  if (lower.includes('bài khó') || lower.includes('không làm được') || lower.includes('bế tắc') || lower.includes('không hiểu') || lower.includes('khó quá') || lower.includes('dốt')) {
     return {
       mode: 'orange',
-      tag: 'Tư Duy Phát Triển (Growth Mindset)',
-      response: `
-        <p>Não bộ bạn không bế tắc đâu, chỉ là <strong>CHƯA</strong> tìm đúng cách giải thôi. Đây chính là lúc liên kết nơ-ron đang dày lên để bạn thông minh hơn đấy!</p>
-        <p>🚀 Đừng đọc lại từ đầu, hãy thử <strong>Đọc đảo ngược (Nan 09)</strong>: Đọc thẳng câu hỏi cuối cùng xem đề bắt tìm gì rồi chia thành 2 ý nhỏ ra nháp nhé!</p>
-        <div class="msg-actions-row">
-          <button class="msg-action-btn orange-act" onclick="openFanDetail(9)"><i class="fa-solid fa-lightbulb"></i> Nan 09: Đọc đảo ngược</button>
-          <button class="msg-action-btn orange-act" onclick="openFanDetail(12)"><i class="fa-solid fa-hand-holding-hand"></i> Nan 12: 3 Bước hỏi bài</button>
-        </div>
-      `
+      tag: 'Tư Duy Phát Triển (Nan 09)',
+      response: `Não bộ bạn không hề bế tắc đâu, chỉ là **CHƯA** tìm đúng góc tiếp cận thôi!\n\n🚀 Đừng đọc đề từ đầu đến cuối một cách bối rối nữa. Hãy thử kỹ thuật **Nan 09: Đọc đảo ngược & Chia nhỏ vi mô**:\n1. Đọc thẳng vào **câu hỏi cuối cùng** của đề bài xem người ta cần tìm đại lượng gì.\n2. Tách bài toán thành 2-3 câu hỏi phụ nhỏ hơn ra giấy nháp.\n3. Liệt kê công thức liên kết giữa dữ kiện đã biết và dữ kiện cần tìm.`
     };
   }
 
-  return {
-    mode: currentOperatingMode === 'orange' ? 'orange' : 'sage',
-    tag: currentOperatingMode === 'orange' ? 'Trợ Lý Tự Điều Chỉnh Học Tập' : 'Xoa Dịu & Lắng Nghe',
-    response: `
-      <p>Mình luôn ở đây lắng nghe bạn. Bạn không cần chịu đựng áp lực một mình đâu.</p>
-      <p>Bây giờ bạn muốn xoa dịu cảm xúc cho nhẹ nhõm, hay cùng mình lên kế hoạch giải quyết nhanh bài tập tối nay?</p>
-      <div class="msg-actions-row">
-        <button class="msg-action-btn" onclick="openBreathingModal()"><i class="fa-solid fa-wind"></i> Thở xoa dịu</button>
-        <button class="msg-action-btn orange-act" onclick="openTimerModal()"><i class="fa-solid fa-stopwatch"></i> Bắt đầu 5 phút</button>
-      </div>
-    `
-  };
+  // 7. Học trước quên sau / Không nhớ kiến thức
+  if (lower.includes('quên') || lower.includes('học vẹt') || lower.includes('không nhớ') || lower.includes('nhanh quên') || lower.includes('feynman') || lower.includes('hiểu sâu')) {
+    return {
+      mode: 'orange',
+      tag: 'Kỹ Thuật Tự Vấn Feynman (Nan 10)',
+      response: `Học vẹt rất nhanh quên vì não chỉ lưu ở trí nhớ tạm thời. Để biến kiến thức thành của mình vĩnh viễn, hãy thử **Nan 10: Feynman 2 phút**:\n\n1. Gập toàn bộ sách vở lại.\n2. Tự giảng giải lại bài học thành tiếng như đang kể cho một bạn lớp dưới bằng ngôn ngữ đơn giản nhất.\n3. Điểm nào bạn bị ngắc ngứ hoặc lúng túng chính là lỗ hổng cần mở sách đọc lại ngay!`
+    };
+  }
+
+  // 8. Mất ngủ / Khó ngủ / Lo lắng trước ngày thi
+  if (lower.includes('mất ngủ') || lower.includes('khó ngủ') || lower.includes('thao thức') || lower.includes('không ngủ được') || lower.includes('hồi hộp') || lower.includes('sợ thi')) {
+    return {
+      mode: 'sage',
+      tag: 'Thả Lỏng & Hạ Nhiệt Tâm Trí',
+      response: `Cảm giác hồi hộp, trằn trọc trước kỳ thi là phản ứng tự nhiên của cơ thể khi đứng trước thử thách quan trọng.\n\n🌿 Ngay bây giờ, hãy đặt điện thoại xa giường và thử **Nan 05: Body Scan (Quét cơ thể 2 phút)**:\n* Nhắm mắt, hít thở chậm bằng bụng.\n* Thả lỏng vầng trán, thả lỏng đôi vai đang gồng cứng, rồi đến cánh tay và bàn chân.\n* Tự nhủ: *"Mọi sự chuẩn bị của mình đã đủ, đêm nay cơ thể mình xứng đáng được nghỉ ngơi."*`
+    };
+  }
+
+  // 9. Tự ti / So sánh bản thân với bạn bè
+  if (lower.includes('tự ti') || lower.includes('so sánh') || lower.includes('thua kém') || lower.includes('kém cỏi') || lower.includes('bạn giỏi hơn') || lower.includes('thấy mình tệ')) {
+    return {
+      mode: 'sage',
+      tag: 'Tính Đồng Loại & Tiến Bộ 1% (Nan 04)',
+      response: `So sánh hậu trường của mình với ánh hào quang của người khác chỉ mang lại mệt mỏi thôi bạn ạ.\n\n🌿 Hãy nhớ đến bài học ở **Nan 04: Tiến bộ 1% mỗi ngày & Tính đồng loại**: Mỗi người có một nhịp sinh học và xuất phát điểm riêng. Bạn không cần phải giỏi hơn ai cả, chỉ cần **tốt hơn chính mình ngày hôm qua 1%** đã là một kỳ tích rồi!\n\nNhìn lại tuần qua, bạn đã chăm chỉ đến lớp và vượt qua bao nhiêu bài kiểm tra rồi, hãy ghi nhận nỗ lực của chính mình nhé!`
+    };
+  }
+
+  // 10. Suy nghĩ tiêu cực / Tự dằn vặt
+  if (lower.includes('tiêu cực') || lower.includes('tự trách') || lower.includes('ghét bản thân') || lower.includes('dằn vặt') || lower.includes('tồi tệ') || lower.includes('vô dụng')) {
+    return {
+      mode: 'sage',
+      tag: 'Tự Trắc Ẩn Bản Thân (Nan 06)',
+      response: `Dừng lại một chút nhé bạn ơi! Hãy lắng nghe xem giọng nói bên trong bạn đang khắt khe đến mức nào.\n\n🌿 Áp dụng **Nan 06: Đổi vai đối thoại như với bạn thân**:\n* Nếu người bạn thân nhất của bạn gặp khó khăn này, bạn có mắng bạn ấy vô dụng không? Chắc chắn là không, bạn sẽ ôm bạn ấy và an ủi.\n* Vậy thì bạn cũng xứng đáng nhận được sự dịu dàng đó từ chính bản thân mình ngay lúc này!`
+    };
+  }
+
+  // 11. Xao nhãng điện thoại / Mạng xã hội
+  if (lower.includes('điện thoại') || lower.includes('lướt mạng') || lower.includes('facebook') || lower.includes('tiktok') || lower.includes('mất tập trung') || lower.includes('game')) {
+    return {
+      mode: 'orange',
+      tag: 'Hộp Cách Ly 2 Mét (Nan 13)',
+      response: `Sức hút từ mạng xã hội được thiết kế để thao túng sự chú ý của chúng ta, nên dùng ý chí để chống lại nó là rất khó.\n\n🚀 Hãy thử chiến lược **Nan 13: Cách ly 2 mét**:\n1. Để điện thoại cách bàn học ít nhất **2 mét** hoặc cất vào ngăn kéo tủ.\n2. Đặt cạnh sách một **tờ giấy nháp "Chờ xử lý"**: Hễ nảy sinh ý muốn lướt mạng, viết ý tưởng đó vào giấy và hẹn bản thân giải quyết trong 5 phút nghỉ Pomodoro!`
+    };
+  }
+
+  // 12. Ngại hỏi bài thầy cô
+  if (lower.includes('ngại hỏi') || lower.includes('sợ hỏi') || lower.includes('ngại thầy cô') || lower.includes('sợ bị mắng') || lower.includes('giấu dốt')) {
+    return {
+      mode: 'orange',
+      tag: 'Công Thức 3 Bước Hỏi Bài (Nan 12)',
+      response: `Hỏi bài là dấu hiệu của người dũng cảm và chủ động thích ứng, không phải là yếu kém đâu bạn nhé!\n\n🚀 Hãy áp dụng **Nan 12: Công thức 3 bước hỏi bài thông minh**:\n* **Bước 1 (Chỉ phần đã hiểu):** *"Thưa thầy/cô, em đã đọc công thức và tính được đến bước này..."*\n* **Bước 2 (Chỉ đúng điểm nghẽn):** *"...nhưng đoạn biến đổi sang bước kế tiếp em chưa rõ tại sao."*\n* **Bước 3:** Lắng nghe và ghi chép ngay bằng bút đỏ vào lề vở!`
+    };
+  }
+
+  // 13. Nhớ nhà / Cô đơn ở nội trú
+  if (lower.includes('nhớ nhà') || lower.includes('cô đơn') || lower.includes('xa nhà') || lower.includes('nội trú') || lower.includes('tủi thân') || lower.includes('khóc')) {
+    return {
+      mode: 'sage',
+      tag: 'Điểm Tựa Thấu Cảm Nội Trú',
+      response: `Cuộc sống nội trú xa gia đình, bố mẹ ở bản làng xa xôi thực sự là một thử thách rất lớn đối với bạn. Cảm giác nhớ nhà và tủi thân là hoàn toàn tự nhiên.\n\n🌿 Nhưng bạn hãy nhìn lại xem: Bạn đang dũng cảm từng ngày để học tập và xây dựng tương lai cho chính mình và gia đình. Hãy thử viết một bài vào **Sổ tay Tự trắc ẩn** hoặc trò chuyện với bạn cùng phòng nhé. Thầy cô và bạn bè trường PTDTNT luôn ở bên bạn!`
+    };
+  }
+
+  // 14. Cảm ơn / Lời chào tạm biệt
+  if (lower.includes('cảm ơn') || lower.includes('thank') || lower.includes('cám ơn') || lower.includes('tuyệt') || lower.includes('hay quá') || lower.includes('tạm biệt') || lower.includes('bye')) {
+    return {
+      mode: 'sage',
+      tag: 'CHẠM Đồng Hành',
+      response: `Không có gì đâu bạn ơi! Được đồng hành và lắng nghe bạn là niềm vui của CHẠM.\n\n🌿 Hãy luôn nhớ rằng: Bất cứ khi nào bạn cảm thấy mệt mỏi cần hạ nhiệt, hay cần một chiến lược để bứt phá trong học tập, CHẠM luôn ở đây bên bạn 24/7.\n\nChúc bạn có một buổi tối thật an yên và tràn đầy năng lượng tích cực nhé! 🚀`
+    };
+  }
+
+  // 15. Phản hồi luân phiên thông minh mặc định (thay vì lặp 1 câu)
+  const defaultResponses = [
+    {
+      mode: currentOperatingMode === 'orange' ? 'orange' : 'sage',
+      tag: currentOperatingMode === 'orange' ? 'Chiến Lược Tự Điều Chỉnh' : 'Xoa Dịu & Lắng Nghe',
+      response: `Mình đang lắng nghe bạn đây. Những áp lực hay băn khoăn ở trường lớp đôi khi rất khó để giãi bày cùng ai.\n\nBạn có thể chia sẻ cụ thể hơn được không? Ví dụ như bạn đang gặp khó khăn ở môn học nào, hay đang có cảm xúc gì khiến bạn phiền lòng? Mình sẽ cùng bạn gỡ rối từng chút một nhé!`
+    },
+    {
+      mode: currentOperatingMode === 'orange' ? 'orange' : 'sage',
+      tag: currentOperatingMode === 'orange' ? 'Hỗ Trợ Bứt Phá' : 'Điểm Tựa Thấu Cảm',
+      response: `Mình hiểu và ghi nhận những điều bạn vừa chia sẻ. Bạn không phải gánh vác mọi việc một mình đâu.\n\nBây giờ, bạn muốn chúng mình cùng **Thở 4-7-8** cho nhẹ nhõm đầu óc trước, hay cùng **Bật hẹn giờ 5 phút** để bắt tay vào giải quyết bài tập ngay?`
+    },
+    {
+      mode: 'orange',
+      tag: 'Kích Hoạt Năng Lượng',
+      response: `Mỗi thử thách trong học tập chính là cơ hội để não bộ chúng ta rèn luyện sự bền bỉ.\n\nBạn hãy thử mở **14 Nan Thẻ Quạt** ở thanh bên trái để chọn ngay một chiến lược bỏ túi phù hợp với tâm trạng hôm nay nhé! Hoặc hãy kể thêm cho mình nghe, mình luôn sẵn sàng đồng hành cùng bạn.`
+    }
+  ];
+
+  const randomIndex = Math.floor(Math.random() * defaultResponses.length);
+  return defaultResponses[randomIndex];
 };
