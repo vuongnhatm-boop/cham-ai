@@ -23,6 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const modeSageBtn = document.getElementById('modeSageBtn');
   const modeOrangeBtn = document.getElementById('modeOrangeBtn');
 
+  // Chat History & Multi-Session Elements
+  const startNewChatBtn = document.getElementById('startNewChatBtn');
+  const topNewChatBtn = document.getElementById('topNewChatBtn');
+  const tabFanDeckBtn = document.getElementById('tabFanDeckBtn');
+  const tabChatHistoryBtn = document.getElementById('tabChatHistoryBtn');
+  const fanDeckView = document.getElementById('fanDeckView');
+  const chatHistoryView = document.getElementById('chatHistoryView');
+  const chatHistoryList = document.getElementById('chatHistoryList');
+  const historyCountBadge = document.getElementById('historyCountBadge');
+  const clearAllHistoryBtn = document.getElementById('clearAllHistoryBtn');
+
   // Modals
   const breathingModal = document.getElementById('breathingModal');
   const timerModal = document.getElementById('timerModal');
@@ -36,8 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggleShowKeyBtn = document.getElementById('toggleShowKeyBtn');
 
   // API Key & Model Configuration
-  const DEFAULT_API_KEY = 'AQ.Ab8RN6L8Z51P_Dre-ujROkl_LZfSQ-XjKlAIOM1w_usADN0CLQ';
-  let activeApiKey = localStorage.getItem('CHAM_GEMINI_API_KEY') || DEFAULT_API_KEY;
+  let activeApiKey = localStorage.getItem('CHAM_GEMINI_API_KEY') || '';
+  if (activeApiKey && activeApiKey.startsWith('AQ.')) {
+    activeApiKey = '';
+    localStorage.removeItem('CHAM_GEMINI_API_KEY');
+  }
   if (apiKeyInput) apiKeyInput.value = activeApiKey;
 
   // Fallback models order
@@ -52,6 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Conversation memory for multi-turn chat
   let conversationHistory = [];
 
+  // Multi-session chat history state
+  let currentSessionId = localStorage.getItem('CHAM_CURRENT_SESSION_ID') || ('session_' + Date.now());
+  let currentSessionTitle = '';
+  let currentSessionMessages = [];
+  localStorage.setItem('CHAM_CURRENT_SESSION_ID', currentSessionId);
+
   // State
   let currentOperatingMode = 'auto'; // 'auto' | 'sage' | 'orange'
   let currentFanCardIndex = 1;
@@ -60,6 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
      1. GỌI GOOGLE GEMINI API TRỰC TIẾP
      ========================================================================== */
   async function callGeminiApi(userPrompt) {
+    if (!activeApiKey) {
+      updateAiBadge(false, 'Trí tuệ CHẠM (Nội bộ)');
+      return { success: false, reason: 'no_key' };
+    }
+
     conversationHistory.push({
       role: 'user',
       parts: [{ text: userPrompt }]
@@ -122,8 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    console.error('All Gemini models failed, falling back to local engine. Last error:', lastError);
-    updateAiBadge(false, 'Ngoại tuyến (Quy tắc nội bộ)');
+    console.warn('All Gemini models failed, falling back to local engine. Last error:', lastError);
+    updateAiBadge(false, 'Trí tuệ CHẠM (Nội bộ)');
     return { success: false, error: lastError };
   }
 
@@ -145,12 +170,12 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ==========================================================================
      2. GỬI VÀ HIỂN THỊ TIN NHẮN
      ========================================================================== */
-  function addMessage(sender, rawContent, metaTag = '') {
+  function addMessage(sender, rawContent, metaTag = '', shouldSave = true, customTime = null) {
     const row = document.createElement('div');
     row.className = `message-row ${sender}-row`;
 
     const now = new Date();
-    const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    const timeStr = customTime || `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
     if (sender === 'user') {
       row.innerHTML = `
@@ -163,31 +188,33 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
     } else {
+      // Loại bỏ khoảng trắng thụt lề đầu dòng để tránh marked hiểu nhầm thành khối code <pre><code>
+      const cleanContent = rawContent.replace(/^[ \t]+/gm, '');
       let formattedHtml = '';
       if (typeof window.marked !== 'undefined' && typeof window.marked.parse === 'function') {
-        formattedHtml = window.marked.parse(rawContent);
+        formattedHtml = window.marked.parse(cleanContent);
       } else {
-        formattedHtml = rawContent;
+        formattedHtml = cleanContent;
       }
 
       let dynamicActionButtons = '';
       const lower = rawContent.toLowerCase();
-      if (lower.includes('4-7-8') || lower.includes('thở')) {
+      if ((lower.includes('4-7-8') || lower.includes('thở')) && !formattedHtml.includes('openBreathingModal')) {
         dynamicActionButtons += `<button class="msg-action-btn" onclick="openBreathingModal()"><i class="fa-solid fa-wind"></i> Mở bài tập Thở 4-7-8</button> `;
       }
-      if (lower.includes('5 phút') || lower.includes('trì hoãn') || lower.includes('sức ỳ')) {
+      if ((lower.includes('5 phút') || lower.includes('trì hoãn') || lower.includes('sức ỳ')) && !formattedHtml.includes('openTimerModal')) {
         dynamicActionButtons += `<button class="msg-action-btn orange-act" onclick="openTimerModal()"><i class="fa-solid fa-stopwatch"></i> Bật hẹn giờ 5 phút</button> `;
       }
-      if (lower.includes('nan 02') || lower.includes('nan 2')) {
+      if ((lower.includes('nan 02') || lower.includes('nan 2')) && !formattedHtml.includes('openFanDetail(2)')) {
         dynamicActionButtons += `<button class="msg-action-btn" onclick="openFanDetail(2)"><i class="fa-solid fa-leaf"></i> Mở Nan 02: Tự tha thứ</button> `;
       }
-      if (lower.includes('nan 09') || lower.includes('nan 9')) {
+      if ((lower.includes('nan 09') || lower.includes('nan 9')) && !formattedHtml.includes('openFanDetail(9)')) {
         dynamicActionButtons += `<button class="msg-action-btn orange-act" onclick="openFanDetail(9)"><i class="fa-solid fa-lightbulb"></i> Mở Nan 09: Đọc đảo ngược</button> `;
       }
-      if (lower.includes('nan 10') || lower.includes('feynman')) {
+      if ((lower.includes('nan 10') || lower.includes('feynman')) && !formattedHtml.includes('openFanDetail(10)')) {
         dynamicActionButtons += `<button class="msg-action-btn orange-act" onclick="openFanDetail(10)"><i class="fa-solid fa-chalkboard-user"></i> Mở Nan 10: Feynman</button> `;
       }
-      if (lower.includes('nan 11') || lower.includes('pomodoro')) {
+      if ((lower.includes('nan 11') || lower.includes('pomodoro') || lower.includes('top 3')) && !formattedHtml.includes('openFanDetail(11)')) {
         dynamicActionButtons += `<button class="msg-action-btn orange-act" onclick="openFanDetail(11)"><i class="fa-solid fa-clock"></i> Mở Nan 11: Top 3 & Pomodoro</button> `;
       }
 
@@ -196,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       row.innerHTML = `
-        <div class="msg-avatar"><img src="assets/avatar.jpg" alt="CHẠM" class="bot-avatar-img" width="38" height="38" style="width: 38px; height: 38px; max-width: 38px; max-height: 38px; object-fit: cover; border-radius: 50%; display: block;"></div>
+        <div class="msg-avatar"><img src="assets/avatar.jpg?v=6" alt="CHẠM" class="bot-avatar-img" width="38" height="38" style="width: 38px; height: 38px; max-width: 38px; max-height: 38px; object-fit: cover; border-radius: 50%; display: block;"></div>
         <div class="msg-bubble-wrap">
           <div class="msg-author">
             CHẠM ${metaTag ? `<span class="mode-tag">${metaTag}</span>` : ''} 
@@ -212,15 +239,50 @@ document.addEventListener('DOMContentLoaded', () => {
     messageFeed.appendChild(row);
     scrollToBottom();
 
-    // Đồng bộ dữ liệu trò chuyện lên Máy chủ Google Firebase (ai-cham)
-    if (window.chamFirebase && typeof window.chamFirebase.saveChatMessage === 'function') {
-      window.chamFirebase.saveChatMessage(sender, rawContent, currentOperatingMode, metaTag);
+    // Lưu phiên chat đa nhiệm & đồng bộ Firebase
+    if (shouldSave) {
+      if (!currentSessionTitle && sender === 'user') {
+        const cleanTitle = rawContent.replace(/[\n\r]+/g, ' ').trim();
+        currentSessionTitle = cleanTitle.length > 38 ? cleanTitle.substring(0, 38) + '...' : cleanTitle;
+      }
+
+      currentSessionMessages.push({
+        sender,
+        rawContent,
+        metaTag: metaTag || '',
+        time: timeStr,
+        timestamp: Date.now()
+      });
+
+      if (window.chamFirebase && typeof window.chamFirebase.saveConversationSession === 'function') {
+        window.chamFirebase.saveConversationSession({
+          id: currentSessionId,
+          title: currentSessionTitle || 'Cuộc trò chuyện mới',
+          messages: currentSessionMessages
+        });
+        refreshHistoryList(false);
+      }
+
+      // Đồng bộ dữ liệu trò chuyện lên Máy chủ Google Firebase (ai-cham)
+      if (window.chamFirebase && typeof window.chamFirebase.saveChatMessage === 'function') {
+        window.chamFirebase.saveChatMessage(sender, rawContent, currentOperatingMode, metaTag);
+      }
     }
   }
 
   async function handleSend() {
     const text = userInput.value.trim();
     if (!text) return;
+
+    // KIỂM TRA MÃ LỆNH QUẢN TRỊ NGẦM: "quanli" HOẶC "quanly"
+    const normalizedCmd = text.toLowerCase().trim().replace(/[\s\/\_\-\.\#\:\!]/g, '');
+    if (normalizedCmd === 'quanli' || normalizedCmd === 'quanly') {
+      userInput.value = '';
+      userInput.style.height = 'auto';
+      if (welcomeCard) welcomeCard.style.display = 'none';
+      unlockAdminMasterMode();
+      return;
+    }
 
     addMessage('user', text);
     userInput.value = '';
@@ -443,9 +505,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fanDetailModal.classList.remove('hidden');
 
-    // Ghi nhận sự kiện học sinh xem nan thẻ quạt lên Firebase
+    // Ghi nhận sự kiện học sinh xem nan thẻ quạt lên LocalStorage & Firebase
+    try {
+      const fanClicks = JSON.parse(localStorage.getItem('CHAM_FAN_CLICKS') || '{}');
+      fanClicks[currentFanCardIndex] = (fanClicks[currentFanCardIndex] || 0) + 1;
+      localStorage.setItem('CHAM_FAN_CLICKS', JSON.stringify(fanClicks));
+    } catch(e) {}
+
     if (window.chamFirebase && typeof window.chamFirebase.logEvent === 'function') {
       window.chamFirebase.logEvent('view_fan_card', { card_id: currentFanCardIndex, card_title: data.title, type: data.type });
+    }
+    if (window.chamFirebase && typeof window.chamFirebase.recordUserStat === 'function') {
+      window.chamFirebase.recordUserStat('fan_' + currentFanCardIndex);
     }
   };
 
@@ -633,6 +704,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (window.chamFirebase && typeof window.chamFirebase.logEvent === 'function') {
         window.chamFirebase.logEvent('start_5min_timer');
+      }
+      if (window.chamFirebase && typeof window.chamFirebase.recordUserStat === 'function') {
+        window.chamFirebase.recordUserStat('timer');
       }
 
       timerInterval = setInterval(() => {
@@ -872,8 +946,228 @@ document.addEventListener('DOMContentLoaded', () => {
     loadCloudHistoryBtn.addEventListener('click', loadUserCloudHistory);
   }
 
-  window.onUserSignedIn = function(user) {
+  /* ==========================================================================
+     9. QUẢN LÝ LỊCH SỬ CHAT ĐA PHIÊN & ĐỒNG BỘ ĐÁM MÂY (MULTI-SESSION CHAT)
+     ========================================================================== */
+  async function refreshHistoryList(fetchCloud = true) {
+    if (!chatHistoryList) return;
+
+    function renderList(sessions) {
+      if (historyCountBadge) {
+        historyCountBadge.textContent = sessions ? sessions.length : 0;
+      }
+
+      if (!sessions || sessions.length === 0) {
+        chatHistoryList.innerHTML = `
+          <div class="history-empty-state">
+            <i class="fa-regular fa-comments"></i>
+            <p>Chưa có cuộc trò chuyện nào.<br>Hãy bắt đầu tâm sự với CHẠM nhé!</p>
+          </div>
+        `;
+        return;
+      }
+
+      chatHistoryList.innerHTML = sessions.map(s => {
+        const isActive = s.id === currentSessionId ? 'active' : '';
+        const msgCount = (s.messages ? s.messages.length : (s.messageCount || 0));
+        let displayTime = '';
+        if (s.clientUpdatedAt) {
+          const d = new Date(s.clientUpdatedAt);
+          displayTime = `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')} - ${d.getDate()}/${d.getMonth()+1}`;
+        } else {
+          displayTime = 'Gần đây';
+        }
+
+        return `
+          <div class="chat-history-item ${isActive}" data-id="${escapeHtml(s.id)}">
+            <div class="history-item-body">
+              <div class="history-item-title" title="${escapeHtml(s.title || 'Cuộc trò chuyện')}">
+                <i class="fa-regular fa-message history-icon"></i>
+                <span>${escapeHtml(s.title || 'Cuộc trò chuyện mới')}</span>
+              </div>
+              <div class="history-item-meta">
+                <span>${msgCount} tin nhắn</span>
+                <span>•</span>
+                <span>${displayTime}</span>
+              </div>
+            </div>
+            <button class="history-delete-btn" title="Xóa đoạn chat này" data-id="${escapeHtml(s.id)}">
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      // Gắn sự kiện chuyển phiên chat khi click
+      chatHistoryList.querySelectorAll('.chat-history-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+          if (e.target.closest('.history-delete-btn')) return;
+          const sId = item.getAttribute('data-id');
+          if (sId) switchConversation(sId);
+        });
+      });
+
+      // Gắn sự kiện nút xóa session
+      chatHistoryList.querySelectorAll('.history-delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const sId = btn.getAttribute('data-id');
+          if (!sId) return;
+          if (confirm('Bạn có chắc muốn xóa cuộc trò chuyện này không?')) {
+            await deleteConversation(sId);
+          }
+        });
+      });
+    }
+
+    // 1. Hiển thị tức thì từ bộ nhớ cục bộ (0ms, không đơ lag)
+    let localSessions = [];
+    try {
+      localSessions = JSON.parse(localStorage.getItem('CHAM_CHAT_SESSIONS') || '[]');
+    } catch (e) { localSessions = []; }
+    renderList(localSessions);
+
+    // 2. Đồng bộ ngầm không chặn luồng giao diện
+    if (fetchCloud && window.chamFirebase && typeof window.chamFirebase.getConversationSessions === 'function') {
+      try {
+        const cloudSessions = await window.chamFirebase.getConversationSessions();
+        if (cloudSessions && JSON.stringify(cloudSessions) !== JSON.stringify(localSessions)) {
+          renderList(cloudSessions);
+        }
+      } catch (err) {
+        console.warn('Đồng bộ ngầm Firestore sessions:', err);
+      }
+    }
+  }
+
+  async function switchConversation(sessionId) {
+    if (sessionId === currentSessionId && currentSessionMessages.length > 0) {
+      if (window.innerWidth <= 768 && sidebar) sidebar.classList.remove('open');
+      return;
+    }
+
+    let sessions = [];
+    try {
+      sessions = JSON.parse(localStorage.getItem('CHAM_CHAT_SESSIONS') || '[]');
+    } catch (e) {}
+
+    const targetSession = sessions.find(s => s.id === sessionId);
+    if (!targetSession) return;
+
+    currentSessionId = targetSession.id;
+    currentSessionTitle = targetSession.title || '';
+    currentSessionMessages = targetSession.messages || [];
+    localStorage.setItem('CHAM_CURRENT_SESSION_ID', currentSessionId);
+
+    // Dọn dẹp khung chat và hiển thị lại các tin nhắn đã lưu
+    messageFeed.innerHTML = '';
+    conversationHistory = [];
+
+    if (currentSessionMessages.length === 0) {
+      if (welcomeCard) welcomeCard.style.display = 'block';
+    } else {
+      if (welcomeCard) welcomeCard.style.display = 'none';
+      currentSessionMessages.forEach(msg => {
+        addMessage(msg.sender, msg.rawContent, msg.metaTag || '', false, msg.time);
+        if (msg.sender === 'user') {
+          conversationHistory.push({ role: 'user', parts: [{ text: msg.rawContent }] });
+        } else if (msg.sender === 'bot') {
+          conversationHistory.push({ role: 'model', parts: [{ text: msg.rawContent }] });
+        }
+      });
+      if (conversationHistory.length > 12) {
+        conversationHistory = conversationHistory.slice(conversationHistory.length - 12);
+      }
+    }
+
+    refreshHistoryList(false);
+
+    if (window.innerWidth <= 768 && sidebar) {
+      sidebar.classList.remove('open');
+    }
+  }
+
+  function startNewConversation() {
+    currentSessionId = 'session_' + Date.now();
+    currentSessionTitle = '';
+    currentSessionMessages = [];
+    conversationHistory = [];
+    localStorage.setItem('CHAM_CURRENT_SESSION_ID', currentSessionId);
+
+    messageFeed.innerHTML = '';
+    if (welcomeCard) welcomeCard.style.display = 'block';
+    if (userInput) {
+      userInput.value = '';
+      userInput.focus();
+    }
+
+    refreshHistoryList(false);
+
+    if (window.innerWidth <= 768 && sidebar) {
+      sidebar.classList.remove('open');
+    }
+  }
+
+  async function deleteConversation(sessionId) {
+    if (window.chamFirebase && typeof window.chamFirebase.deleteConversationSession === 'function') {
+      await window.chamFirebase.deleteConversationSession(sessionId);
+    } else {
+      let sessions = JSON.parse(localStorage.getItem('CHAM_CHAT_SESSIONS') || '[]');
+      sessions = sessions.filter(s => s.id !== sessionId);
+      localStorage.setItem('CHAM_CHAT_SESSIONS', JSON.stringify(sessions));
+    }
+
+    if (currentSessionId === sessionId) {
+      startNewConversation();
+    } else {
+      await refreshHistoryList(false);
+    }
+  }
+
+  async function clearAllConversations() {
+    if (confirm('Bạn có chắc muốn xóa toàn bộ lịch sử các cuộc trò chuyện trên thiết bị và đám mây không?')) {
+      if (window.chamFirebase && typeof window.chamFirebase.clearAllConversationSessions === 'function') {
+        await window.chamFirebase.clearAllConversationSessions();
+      } else {
+        localStorage.removeItem('CHAM_CHAT_SESSIONS');
+      }
+      startNewConversation();
+    }
+  }
+
+  // Chuyển tab Sidebar (14 Nan Thẻ Quạt <-> Lịch Sử Chat)
+  if (tabFanDeckBtn && tabChatHistoryBtn && fanDeckView && chatHistoryView) {
+    tabFanDeckBtn.addEventListener('click', () => {
+      tabFanDeckBtn.classList.add('active');
+      tabChatHistoryBtn.classList.remove('active');
+      fanDeckView.classList.remove('hidden');
+      chatHistoryView.classList.add('hidden');
+    });
+
+    tabChatHistoryBtn.addEventListener('click', () => {
+      tabChatHistoryBtn.classList.add('active');
+      tabFanDeckBtn.classList.remove('active');
+      fanDeckView.classList.add('hidden');
+      chatHistoryView.classList.remove('hidden');
+      refreshHistoryList(true);
+    });
+  }
+
+  // Các nút bấm tạo phiên chat mới và xóa toàn bộ
+  if (startNewChatBtn) {
+    startNewChatBtn.addEventListener('click', startNewConversation);
+  }
+  if (topNewChatBtn) {
+    topNewChatBtn.addEventListener('click', startNewConversation);
+  }
+  if (clearAllHistoryBtn) {
+    clearAllHistoryBtn.addEventListener('click', clearAllConversations);
+  }
+
+  window.onUserSignedIn = async function(user) {
     console.log('Chào mừng bạn quay lại CHẠM:', user.displayName || user.email);
+    await refreshHistoryList(true);
+    await refreshJournalUI();
   };
 
   /* ==========================================================================
@@ -957,4 +1251,72 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  /* ==========================================================================
+     8. THIẾT LẬP NGẦM QUẢN TRỊ VIÊN (SECRET MASTER CONTROL - "quanli")
+     ========================================================================== */
+  function unlockAdminMasterMode(silent = false) {
+    localStorage.setItem('cham_admin_role', 'true');
+
+    if (!silent) {
+      addMessage('bot', `👑 **ĐÃ XÁC THỰC QUYỀN QUẢN TRỊ VIÊN (MASTER CONTROL)**
+
+Chào Thầy/Cô Quản trị viên! Đang tự động chuyển hướng đến Bảng điều khiển Quản trị trong tab mới:
+* 📊 Theo dõi thời gian thực dữ liệu học sinh, bài tập thở và đồng hồ học tập.
+* 📈 Quản lý học sinh, duyệt bài nhật ký tâm lý và xuất báo cáo dữ liệu.`, 'Quản Trị Viên');
+
+      // Tự động mở trang Admin Dashboard trong tab mới sau 1s
+      setTimeout(() => {
+        window.open('admin.html', '_blank');
+      }, 1000);
+    }
+  }
+
+  window.lockAdminMode = function() {
+    localStorage.removeItem('cham_admin_role');
+    alert('🔒 Đã khóa lại chế độ Quản trị viên.');
+  };
+
+  // Kiểm tra & Hiển thị Thông báo toàn trường từ Quản trị viên (nếu có)
+  const broadcastMsg = localStorage.getItem('cham_school_broadcast');
+  const broadcastCard = document.getElementById('schoolBroadcastCard');
+  const broadcastText = document.getElementById('schoolBroadcastText');
+  const closeBroadcastBannerBtn = document.getElementById('closeBroadcastBannerBtn');
+
+  if (broadcastCard && broadcastText && broadcastMsg) {
+    broadcastText.textContent = broadcastMsg;
+    broadcastCard.classList.remove('hidden');
+  }
+  if (closeBroadcastBannerBtn && broadcastCard) {
+    closeBroadcastBannerBtn.addEventListener('click', () => {
+      broadcastCard.classList.add('hidden');
+    });
+  }
+
+  // Khởi tạo danh sách lịch sử trò chuyện & khôi phục phiên gần nhất nếu có
+  (async () => {
+    try {
+      await refreshHistoryList(true);
+      const sessions = JSON.parse(localStorage.getItem('CHAM_CHAT_SESSIONS') || '[]');
+      const existingSession = sessions.find(s => s.id === currentSessionId);
+      if (existingSession && existingSession.messages && existingSession.messages.length > 0) {
+        currentSessionTitle = existingSession.title || '';
+        currentSessionMessages = existingSession.messages;
+        if (welcomeCard) welcomeCard.style.display = 'none';
+        currentSessionMessages.forEach(msg => {
+          addMessage(msg.sender, msg.rawContent, msg.metaTag || '', false, msg.time);
+          if (msg.sender === 'user') {
+            conversationHistory.push({ role: 'user', parts: [{ text: msg.rawContent }] });
+          } else if (msg.sender === 'bot') {
+            conversationHistory.push({ role: 'model', parts: [{ text: msg.rawContent }] });
+          }
+        });
+        if (conversationHistory.length > 12) {
+          conversationHistory = conversationHistory.slice(conversationHistory.length - 12);
+        }
+      }
+    } catch (e) {
+      console.warn('Lỗi khởi tạo phiên chat ban đầu:', e);
+    }
+  })();
 });
