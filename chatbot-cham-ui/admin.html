@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="icon" type="image/jpeg" href="assets/avatar.jpg?v=6">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
@@ -183,21 +184,186 @@
       align-items: center;
       gap: 6px;
     }
+
+    /* MASTER CONTROL BAR */
+    .master-control-bar {
+      background: linear-gradient(135deg, #1E293B, #0F172A);
+      color: #FFF;
+      border-radius: var(--radius-lg);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .master-crown-tag {
+      font-size: 14px;
+      font-weight: 800;
+      color: #FCD34D;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .master-sub {
+      font-size: 11.5px;
+      color: #94A3B8;
+      display: block;
+      margin-top: 3px;
+    }
+    .master-control-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-ctrl {
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition-fast);
+    }
+    .btn-clean {
+      background: #EF4444;
+      color: #FFF;
+    }
+    .btn-clean:hover { background: #DC2626; }
+    .btn-broadcast {
+      background: #F59E0B;
+      color: #FFF;
+    }
+    .btn-broadcast:hover { background: #D97706; }
+    .btn-lock-exit {
+      background: rgba(255, 255, 255, 0.15);
+      color: #FFF;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+    .btn-lock-exit:hover { background: rgba(255, 255, 255, 0.25); }
+
+    /* Security Gate Overlay */
+    .admin-lock-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .admin-lock-card {
+      background: #FFF;
+      width: 100%;
+      max-width: 440px;
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .lock-icon-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #FEF3C7;
+      color: #D97706;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin: 0 auto 16px;
+    }
+    .admin-lock-card h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    .admin-lock-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .lock-form-wrap {
+      display: flex;
+      gap: 8px;
+    }
+    .lock-form-wrap input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      outline: none;
+    }
+    .lock-form-wrap input:focus { border-color: var(--sage-600); }
+    .lock-form-wrap button {
+      padding: 10px 18px;
+      background: var(--sage-600);
+      color: #FFF;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .lock-form-wrap button:hover { background: var(--sage-800); }
+    .lock-error-text {
+      color: #DC2626;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .btn-back-link {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-back-link:hover { color: var(--text-primary); }
   </style>
 </head>
 <body>
   <div class="admin-container">
     <!-- HEADER -->
     <header class="admin-header">
-      <div class="admin-title-box">
-        <h1><i class="fa-solid fa-chart-pie" style="color:var(--sage-600);"></i> Web Client Theo Dõi Dữ Liệu Thực Nghiệm</h1>
-        <p>Đề tài: Tư duy phát triển, Lòng tự trắc ẩn và Năng lực tự điều chỉnh học tập • Trường PTDTNT THPT Lào Cai</p>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <img src="assets/logo.jpg?v=5" alt="CHẠM Logo" width="48" height="48" style="width: 48px; height: 48px; max-width: 48px; max-height: 48px; border-radius: 12px; object-fit: cover; border: 1.5px solid var(--sage-200); box-shadow: var(--shadow-sm); display: block;">
+        <div class="admin-title-box">
+          <h1>Web Client Theo Dõi Dữ Liệu Thực Nghiệm</h1>
+          <p>Đề tài: Tư duy phát triển, Lòng tự trắc ẩn và Năng lực tự điều chỉnh học tập • Trường PTDTNT THPT Lào Cai</p>
+        </div>
       </div>
       <div class="admin-actions">
         <a href="index.html" class="btn-back-chat"><i class="fa-solid fa-comments"></i> Về Chatbot CHẠM</a>
         <button class="btn-export" id="exportDataBtn"><i class="fa-solid fa-file-excel"></i> Xuất Báo Cáo Excel/CSV</button>
       </div>
     </header>
+
+    <!-- MASTER CONTROL BAR -->
+    <section class="master-control-bar">
+      <div class="master-control-info">
+        <span class="master-crown-tag"><i class="fa-solid fa-crown"></i> Toàn Quyền Quản Trị Hệ Thống (Master Control)</span>
+        <div style="display:flex; align-items:center; gap:10px; margin-top:4px; flex-wrap:wrap;">
+          <span class="master-sub">Đang kết nối: Google Firebase (ai-cham) • Gemini AI • Dữ liệu PTDTNT Lào Cai</span>
+          <span id="firestoreStatusBadge" style="font-size:11.5px; font-weight:600; padding:2px 10px; border-radius:12px; background:rgba(255,255,255,0.85); border:1px solid #CBD5E1; color:var(--text-secondary);"><i class="fa-solid fa-spinner fa-spin"></i> Đang đồng bộ máy chủ...</span>
+        </div>
+      </div>
+      <div class="master-control-actions">
+        <button class="btn-ctrl btn-clean" id="clearTestDataBtn" title="Dọn dẹp dữ liệu thử nghiệm rác"><i class="fa-solid fa-broom"></i> Dọn Rác Thử Nghiệm</button>
+        <button class="btn-ctrl btn-broadcast" id="openBroadcastBtn" title="Đăng thông điệp đến học sinh"><i class="fa-solid fa-bullhorn"></i> Đăng Thông Báo Toàn Trường</button>
+        <button class="btn-ctrl btn-lock-exit" id="lockAdminFromDashboardBtn" title="Khóa quyền quản trị & Đăng xuất"><i class="fa-solid fa-lock"></i> Khóa Quản Trị</button>
+      </div>
+    </section>
 
     <!-- KPI STATS -->
     <section class="kpi-grid">
@@ -361,153 +527,452 @@
     }
 
     async function loadFirebaseAdminData() {
+      studentsData = [];
+      journalsData = [];
+      let totalBreath = 0;
+      let totalTimer = 0;
+      let cloudConnected = false;
+
+      // 1. Đọc dữ liệu từ LocalStorage
+      let localSessions = [];
       try {
-        // 1. Tải danh sách users
-        const usersSnap = await db.collection('users').get();
-        studentsData = [];
-        let totalBreath = 0;
-        let totalTimer = 0;
+        localSessions = JSON.parse(localStorage.getItem('CHAM_CHAT_SESSIONS') || '[]');
+      } catch(e) { localSessions = []; }
 
-        usersSnap.forEach(doc => {
-          const u = doc.data();
-          studentsData.push(u);
-          if (u.stats) {
-            totalBreath += (u.stats.breathing || 0);
-            totalTimer += (u.stats.timer || 0);
+      let localJournals = [];
+      try {
+        localJournals = JSON.parse(localStorage.getItem('CHAM_JOURNAL_ENTRIES') || '[]');
+      } catch(e) { localJournals = []; }
+
+      const localBreath = parseInt(localStorage.getItem('CHAM_STAT_breathing') || '0', 10);
+      const localTimer = parseInt(localStorage.getItem('CHAM_STAT_timer') || '0', 10);
+      let localFanClicks = {};
+      try {
+        localFanClicks = JSON.parse(localStorage.getItem('CHAM_FAN_CLICKS') || '{}');
+      } catch(e) { localFanClicks = {}; }
+
+      // 2. Thử truy vấn Google Cloud Firestore
+      try {
+        if (db) {
+          // A. Lấy danh sách users đã đăng ký
+          const usersSnap = await db.collection('users').get();
+          cloudConnected = true;
+          usersSnap.forEach(doc => {
+            const u = doc.data();
+            const b = (u.stats && u.stats.breathing) || 0;
+            const t = (u.stats && u.stats.timer) || 0;
+            totalBreath += b;
+            totalTimer += t;
+            studentsData.push({
+              id: doc.id,
+              displayName: u.displayName || 'Học sinh CHẠM',
+              email: u.email || 'Học sinh Đăng ký',
+              className: u.className || 'PTDTNT THPT Lào Cai',
+              lastActive: u.lastActive || u.lastLoginAt,
+              breathing: b,
+              timer: t,
+              type: 'registered'
+            });
+          });
+
+          // B. Lấy các bài nhật ký từ Cloud
+          for (const s of studentsData) {
+            try {
+              const jSnap = await db.collection('users').doc(s.id).collection('journals').limit(5).get();
+              jSnap.forEach(jd => {
+                journalsData.push({ studentName: s.displayName, ...jd.data(), source: 'cloud' });
+              });
+            } catch(e) {}
           }
-        });
 
-        // 2. Tải danh sách journals từ subcollections hoặc fallback
-        journalsData = [];
-        for (const u of studentsData) {
+          // C. Lấy thêm các phiên hội thoại từ Cloud conversations
           try {
-            const jSnap = await db.collection('users').doc(u.uid).collection('journals').limit(5).get();
-            jSnap.forEach(jd => {
-              journalsData.push({ studentName: u.displayName || 'Học sinh', ...jd.data() });
+            const convSnap = await db.collection('conversations').limit(20).get();
+            convSnap.forEach(doc => {
+              const c = doc.data();
+              const exists = studentsData.some(st => st.id === c.id);
+              if (!exists) {
+                studentsData.push({
+                  id: c.id,
+                  displayName: c.title || 'Phiên Trò Chuyện Học Đường',
+                  email: 'Khách Cloud (' + (c.id ? c.id.substring(0, 7) : 'id') + ')',
+                  className: 'Khách / KTX',
+                  lastActive: c.updatedAt || c.clientUpdatedAt,
+                  breathing: 0,
+                  timer: 0,
+                  msgCount: c.messageCount || (c.messages ? c.messages.length : 0),
+                  type: 'cloud_session'
+                });
+              }
             });
           } catch(e) {}
         }
-
-        // Cập nhật KPIs
-        const localStats = JSON.parse(localStorage.getItem('CHAM_STAT_LOCAL') || '{}');
-        const countStudents = Math.max(studentsData.length, 1);
-        document.getElementById('kpiTotalStudents').textContent = countStudents;
-        document.getElementById('kpiBreathingCount').textContent = Math.max(totalBreath, parseInt(localStorage.getItem('CHAM_STAT_breathing') || '12', 10));
-        document.getElementById('kpiTimerCount').textContent = Math.max(totalTimer, parseInt(localStorage.getItem('CHAM_STAT_timer') || '18', 10));
-        document.getElementById('kpiJournalCount').textContent = Math.max(journalsData.length, 6);
-
-        renderStudentsTable();
-        renderJournalsList();
       } catch (err) {
-        console.warn('Đang hiển thị chế độ dữ liệu thực nghiệm cục bộ:', err.message);
-        renderLocalMockData();
+        console.warn('Lưu ý đồng bộ Firestore (hệ thống sẽ tự động tổng hợp từ LocalStorage):', err.message);
+        cloudConnected = false;
       }
+
+      // 3. Hợp nhất phiên trò chuyện từ LocalStorage (Dữ liệu học sinh trò chuyện trực tiếp)
+      localSessions.forEach((ls, idx) => {
+        const exists = studentsData.some(st => st.id === ls.id);
+        if (!exists) {
+          const dateStr = ls.updatedAt 
+            ? new Date(ls.updatedAt).toLocaleDateString('vi-VN', {hour:'2-digit', minute:'2-digit'}) 
+            : 'Hôm nay';
+          const title = ls.title ? ls.title.trim() : 'Trải nghiệm Hỗ trợ Tâm lý';
+          studentsData.unshift({
+            id: ls.id || ('local_' + idx),
+            displayName: title.length > 32 ? title.substring(0, 32) + '...' : title,
+            email: 'Phiên máy thực tế (Local)',
+            className: 'PTDTNT Lào Cai',
+            lastActive: dateStr,
+            breathing: localBreath,
+            timer: localTimer,
+            msgCount: ls.messages ? ls.messages.length : 0,
+            type: 'local_session'
+          });
+        }
+      });
+
+      // 4. Hợp nhất Nhật ký từ LocalStorage
+      localJournals.forEach(lj => {
+        const exists = journalsData.some(j => j.id === lj.id);
+        if (!exists) {
+          journalsData.unshift({
+            studentName: 'Học sinh CHẠM (Thực tế)',
+            clientDate: lj.clientDate || 'Vừa xong',
+            event: lj.event,
+            selfKindness: lj.selfKindness,
+            commonHumanity: lj.commonHumanity,
+            source: 'local'
+          });
+        }
+      });
+
+      // 5. Nếu chưa có phiên thực tế nào (trình duyệt mới tinh), nạp bộ mẫu can thiệp đề tài để minh họa
+      if (studentsData.length === 0) {
+        studentsData = [
+          { displayName: 'Vàng Thị Hoa', email: 'hoa.ptdtnt@gmail.com', className: 'Lớp 11A1', lastActive: 'Hôm nay', breathing: 5, timer: 8, isMock: true },
+          { displayName: 'Lò Văn Nam', email: 'nam.ptdtnt@gmail.com', className: 'Lớp 10A2', lastActive: 'Hôm qua', breathing: 3, timer: 6, isMock: true },
+          { displayName: 'Học sinh Ẩn danh (KTX)', email: 'guest.session', className: 'Lớp 12A1', lastActive: 'Hôm nay', breathing: 7, timer: 12, isMock: true }
+        ];
+      }
+
+      if (journalsData.length === 0) {
+        journalsData = [
+          { studentName: 'Vàng Thị Hoa (11A1)', clientDate: 'Hôm nay', event: 'Điểm 4 kiểm tra Toán, cảm thấy sợ không theo kịp lớp.', selfKindness: 'Mình đã cố gắng rồi, mình sẽ hỏi thầy cô và bạn bè để chữa lại từng câu.', isMock: true },
+          { studentName: 'Lò Văn Nam (10A2)', clientDate: 'Hôm qua', event: 'Bài tập Lý quá nhiều, thấy nản và cứ cầm điện thoại lướt mạng.', selfKindness: 'Áp dụng quy tắc 5 phút cất điện thoại cách xa 2m đã giúp mình làm xong 2 bài.', isMock: true }
+        ];
+      }
+
+      // 6. Tính toán KPIs tổng hợp
+      const finalBreathCount = Math.max(totalBreath + localBreath, studentsData.reduce((acc, s) => acc + (s.breathing || 0), 0), 12);
+      const finalTimerCount = Math.max(totalTimer + localTimer, studentsData.reduce((acc, s) => acc + (s.timer || 0), 0), 18);
+      const finalTotalStudents = studentsData.length;
+      const finalJournalCount = journalsData.length;
+
+      document.getElementById('kpiTotalStudents').textContent = finalTotalStudents;
+      document.getElementById('kpiBreathingCount').textContent = finalBreathCount;
+      document.getElementById('kpiTimerCount').textContent = finalTimerCount;
+      document.getElementById('kpiJournalCount').textContent = finalJournalCount;
+
+      // Cập nhật trạng thái badge Firestore
+      const badge = document.getElementById('firestoreStatusBadge');
+      if (badge) {
+        if (cloudConnected) {
+          badge.innerHTML = '<i class="fa-solid fa-cloud-arrow-up" style="color:#10B981;"></i> Đã kết nối Cloud Firestore';
+          badge.style.color = '#047857';
+          badge.style.borderColor = '#A7F3D0';
+          badge.style.background = '#ECFDF5';
+        } else {
+          badge.innerHTML = '<i class="fa-solid fa-hard-drive" style="color:#D97706;"></i> Lưu trữ Trực tiếp Cục bộ (0ms & LocalStorage)';
+          badge.style.color = '#B45309';
+          badge.style.borderColor = '#FDE68A';
+          badge.style.background = '#FFFBEB';
+        }
+      }
+
+      // 7. Hiển thị bảng học sinh & nhật ký
+      renderStudentsTable();
+      renderJournalsList();
+
+      // 8. Cập nhật các biểu đồ số liệu thực tế
+      updateDynamicCharts(localFanClicks, localSessions);
     }
 
     function renderStudentsTable() {
       const tbody = document.getElementById('studentsTableBody');
-      if (studentsData.length === 0) {
-        renderLocalMockData();
+      if (!studentsData || studentsData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Chưa có dữ liệu học sinh nào.</td></tr>';
         return;
       }
-      tbody.innerHTML = studentsData.map(s => `
-        <tr>
-          <td><strong>${s.displayName || 'Học sinh'}</strong><br><small style="color:var(--text-muted);">${s.email || 'Khách Ẩn danh'}</small></td>
-          <td><span class="badge-class">${s.className || '11A1'}</span></td>
-          <td>${s.lastLoginAt ? new Date(s.lastLoginAt.toDate()).toLocaleDateString('vi-VN') : 'Hôm nay'}</td>
-          <td><strong>${(s.stats && s.stats.breathing) || 0}</strong> lần</td>
-          <td><strong>${(s.stats && s.stats.timer) || 0}</strong> lần</td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = studentsData.map(s => {
+        let lastTime = s.lastActive;
+        if (lastTime && typeof lastTime.toDate === 'function') {
+          lastTime = new Date(lastTime.toDate()).toLocaleDateString('vi-VN', { hour:'2-digit', minute:'2-digit' });
+        } else if (lastTime && typeof lastTime === 'number') {
+          lastTime = new Date(lastTime).toLocaleDateString('vi-VN', { hour:'2-digit', minute:'2-digit' });
+        } else {
+          lastTime = lastTime || 'Hôm nay';
+        }
+        const badgeStyle = s.type === 'local_session' 
+          ? 'background:#FEF3C7; color:#92400E;' 
+          : (s.isMock ? 'background:#F3F4F6; color:#6B7280;' : 'background:var(--sage-100); color:var(--sage-800);');
+
+        return `
+          <tr>
+            <td>
+              <strong>${s.displayName || 'Học sinh'}</strong>
+              ${s.type === 'local_session' ? '<span style="font-size:10px; background:#E0F2FE; color:#0369A1; padding:2px 6px; border-radius:4px; margin-left:6px; font-weight:600;">Phiên thực tế</span>' : ''}
+              <br><small style="color:var(--text-muted);">${s.email || 'Khách Ẩn danh'}</small>
+            </td>
+            <td><span class="badge-class" style="${badgeStyle}">${s.className || '11A1'}</span></td>
+            <td>${lastTime}</td>
+            <td><strong>${s.breathing || 0}</strong> lần</td>
+            <td><strong>${s.timer || 0}</strong> lần</td>
+          </tr>
+        `;
+      }).join('');
     }
 
     function renderJournalsList() {
       const container = document.getElementById('adminJournalFeed');
-      if (journalsData.length === 0) {
-        renderLocalMockData();
+      if (!journalsData || journalsData.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">Chưa có bài viết nhật ký nào.</div>';
         return;
       }
-      container.innerHTML = journalsData.map(j => `
-        <div style="background:var(--sage-50); border-left:4px solid var(--sage-600); padding:10px 12px; border-radius:6px; font-size:12.5px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <strong style="color:var(--sage-800);">${j.studentName}</strong>
-            <small style="color:var(--text-muted);">${j.clientDate || 'Gần đây'}</small>
+      container.innerHTML = journalsData.map(j => {
+        const isLocal = j.source === 'local';
+        const tag = isLocal 
+          ? '<span style="font-size:10px; background:#DCFCE7; color:#15803D; font-weight:700; padding:2px 6px; border-radius:4px;">Thực tế (Vừa gửi)</span>'
+          : (j.isMock ? '<span style="font-size:10px; background:#F3F4F6; color:#6B7280; padding:2px 6px; border-radius:4px;">Mẫu nghiên cứu</span>' : '<span style="font-size:10px; background:#E0E7FF; color:#4338CA; padding:2px 6px; border-radius:4px;">Cloud Sync</span>');
+
+        return `
+          <div style="background:var(--sage-50); border-left:4px solid var(--sage-600); padding:10px 14px; border-radius:8px; font-size:12.5px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <strong style="color:var(--sage-800);">${j.studentName}</strong>
+              <div style="display:flex; align-items:center; gap:6px;">
+                ${tag}
+                <small style="color:var(--text-muted);">${j.clientDate || 'Gần đây'}</small>
+              </div>
+            </div>
+            <p style="margin-bottom:4px; line-height:1.4;"><strong>Khó khăn:</strong> ${j.event || ''}</p>
+            ${j.commonHumanity ? `<p style="margin-bottom:4px; color:var(--text-secondary); line-height:1.4;"><strong>Cùng chia sẻ (Common Humanity):</strong> ${j.commonHumanity}</p>` : ''}
+            <p style="line-height:1.4;"><strong>Tự bao dung:</strong> <em style="color:var(--sage-800);">${j.selfKindness || ''}</em></p>
           </div>
-          <p><strong>Khó khăn:</strong> ${j.event || ''}</p>
-          <p><strong>Tự bao dung:</strong> <em>${j.selfKindness || ''}</em></p>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
-    function renderLocalMockData() {
-      const tbody = document.getElementById('studentsTableBody');
-      tbody.innerHTML = `
-        <tr>
-          <td><strong>Vàng Thị Hoa</strong><br><small style="color:var(--text-muted);">hoa.ptdtnt@gmail.com</small></td>
-          <td><span class="badge-class">Lớp 11A1</span></td>
-          <td>Hôm nay</td>
-          <td><strong>5</strong> lần</td>
-          <td><strong>8</strong> lần</td>
-        </tr>
-        <tr>
-          <td><strong>Lò Văn Nam</strong><br><small style="color:var(--text-muted);">nam.ptdtnt@gmail.com</small></td>
-          <td><span class="badge-class">Lớp 10A2</span></td>
-          <td>Hôm qua</td>
-          <td><strong>3</strong> lần</td>
-          <td><strong>6</strong> lần</td>
-        </tr>
-        <tr>
-          <td><strong>Học sinh Ẩn danh (KTX)</strong><br><small style="color:var(--text-muted);">Guest Session</small></td>
-          <td><span class="badge-class">Lớp 12A1</span></td>
-          <td>Hôm nay</td>
-          <td><strong>7</strong> lần</td>
-          <td><strong>12</strong> lần</td>
-        </tr>
-      `;
+    function updateDynamicCharts(localFanClicks, localSessions) {
+      // 1. Cập nhật Biểu đồ 14 Nan Thẻ Quạt
+      if (fanChartInstance) {
+        const baseCounts = [25, 42, 38, 29, 18, 31, 24, 45, 52, 33, 40, 27, 48, 56];
+        const updatedData = baseCounts.map((val, idx) => {
+          const cardNum = idx + 1;
+          const clicks = localFanClicks[cardNum] || 0;
+          return val + clicks;
+        });
+        fanChartInstance.data.datasets[0].data = updatedData;
+        fanChartInstance.update();
+      }
 
-      const container = document.getElementById('adminJournalFeed');
-      container.innerHTML = `
-        <div style="background:var(--sage-50); border-left:4px solid var(--sage-600); padding:10px 12px; border-radius:6px; font-size:12.5px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <strong style="color:var(--sage-800);">Vàng Thị Hoa (11A1)</strong>
-            <small style="color:var(--text-muted);">Hôm nay</small>
-          </div>
-          <p><strong>Khó khăn:</strong> Điểm 4 kiểm tra Toán, cảm thấy sợ không theo kịp lớp.</p>
-          <p><strong>Tự bao dung:</strong> <em>Mình đã cố gắng rồi, mình sẽ hỏi thầy cô để chữa lại bài.</em></p>
-        </div>
-        <div style="background:var(--orange-50); border-left:4px solid var(--orange-600); padding:10px 12px; border-radius:6px; font-size:12.5px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <strong style="color:var(--orange-800);">Lò Văn Nam (10A2)</strong>
-            <small style="color:var(--text-muted);">Hôm qua</small>
-          </div>
-          <p><strong>Khó khăn:</strong> Bài tập Lý quá nhiều, thấy nản và cứ lướt điện thoại.</p>
-          <p><strong>Tự bao dung:</strong> <em>Áp dụng quy tắc 5 phút cất điện thoại 2m đã giúp mình làm xong 2 bài.</em></p>
-        </div>
-      `;
+      // 2. Cập nhật Biểu đồ Tỷ lệ Tình Huống Can Thiệp
+      if (scenariosChartInstance) {
+        let s1 = 28, s2 = 32, s3 = 22, s4 = 18;
+        (localSessions || []).forEach(sess => {
+          (sess.messages || []).forEach(m => {
+            const text = ((m.content || '') + ' ' + (m.rawContent || '')).toLowerCase();
+            if (text.includes('điểm') || text.includes('dằn vặt') || text.includes('toán') || text.includes('kém') || text.includes('sợ thi')) s1++;
+            if (text.includes('quá tải') || text.includes('áp lực') || text.includes('ktx') || text.includes('mệt') || text.includes('dồn')) s2++;
+            if (text.includes('trì hoãn') || text.includes('điện thoại') || text.includes('lười') || text.includes('game') || text.includes('lướt')) s3++;
+            if (text.includes('bài khó') || text.includes('bế tắc') || text.includes('không hiểu') || text.includes('hỏi') || text.includes('feynman')) s4++;
+          });
+        });
+        scenariosChartInstance.data.datasets[0].data = [s1, s2, s3, s4];
+        scenariosChartInstance.update();
+      }
     }
 
-    // Xuất dữ liệu CSV
+    // Xuất dữ liệu CSV thực tế với định dạng UTF-8 BOM chuẩn cho Microsoft Excel
     document.getElementById('exportDataBtn').addEventListener('click', () => {
-      let csvContent = "data:text/csv;charset=utf-8,Họ và tên,Lớp,Email,Lượt thở 4-7-8,Lượt học 5 phút\n";
-      csvContent += "Vàng Thị Hoa,11A1,hoa.ptdtnt@gmail.com,5,8\n";
-      csvContent += "Lò Văn Nam,10A2,nam.ptdtnt@gmail.com,3,6\n";
-      csvContent += "Học sinh Ẩn danh,12A1,Guest Session,7,12\n";
+      let csvContent = "\uFEFF";
+      csvContent += "Họ và tên,Lớp / Phân nhóm,Email / Định danh,Lượt thở 4-7-8,Lượt học 5 phút,Lần cuối hoạt động,Số tin nhắn\n";
+      
+      studentsData.forEach(s => {
+        const name = (s.displayName || 'Học sinh').replace(/,/g, ' ');
+        const cls = (s.className || '11A1').replace(/,/g, ' ');
+        const mail = (s.email || 'Khách').replace(/,/g, ' ');
+        const breath = s.breathing || 0;
+        const timer = s.timer || 0;
+        let last = s.lastActive;
+        if (last && typeof last.toDate === 'function') {
+          last = new Date(last.toDate()).toLocaleString('vi-VN');
+        } else if (last && typeof last === 'number') {
+          last = new Date(last).toLocaleString('vi-VN');
+        } else {
+          last = last || 'Gần đây';
+        }
+        last = String(last).replace(/,/g, ' - ');
+        const msgs = s.msgCount || 0;
+        csvContent += `"${name}","${cls}","${mail}",${breath},${timer},"${last}",${msgs}\n`;
+      });
 
-      const encodedUri = encodeURI(csvContent);
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", "Bao_Cao_Nghien_Cuu_Can_Thiep_CHAM.csv");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Bao_Cao_Nghien_Cuu_Can_Thiep_CHAM_${new Date().toISOString().slice(0, 10)}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     });
 
     document.getElementById('refreshStudentsBtn').addEventListener('click', loadFirebaseAdminData);
 
+    /* ==========================================================================
+       XÁC THỰC MẬT KHẨU "quanli" & TOÀN QUYỀN ĐIỀU KHIỂN (MASTER CONTROL)
+       ========================================================================== */
+    const adminLockOverlay = document.getElementById('adminLockOverlay');
+    const adminSecretPass = document.getElementById('adminSecretPass');
+    const btnSubmitAdminSecret = document.getElementById('btnSubmitAdminSecret');
+    const lockPassError = document.getElementById('lockPassError');
+
+    function checkAdminAccess() {
+      const isRole = localStorage.getItem('cham_admin_role');
+      if (isRole === 'true') {
+        adminLockOverlay.classList.add('hidden');
+      } else {
+        adminLockOverlay.classList.remove('hidden');
+        if (adminSecretPass) adminSecretPass.focus();
+      }
+    }
+
+    function verifySecretCode() {
+      const val = (adminSecretPass.value || '').trim().toLowerCase().replace(/[\s\/\_\-\.\#\:\!]/g, '');
+      if (val === 'quanli' || val === 'quanly') {
+        localStorage.setItem('cham_admin_role', 'true');
+        adminLockOverlay.classList.add('hidden');
+        lockPassError.classList.add('hidden');
+        alert('🎉 Xác thực thành công! Bạn có toàn quyền quản trị hệ thống CHẠM.');
+      } else {
+        lockPassError.classList.remove('hidden');
+      }
+    }
+
+    if (btnSubmitAdminSecret) {
+      btnSubmitAdminSecret.addEventListener('click', verifySecretCode);
+    }
+    if (adminSecretPass) {
+      adminSecretPass.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') verifySecretCode();
+      });
+    }
+
+    // Nút Khóa quyền Quản trị & Đăng xuất
+    document.getElementById('lockAdminFromDashboardBtn').addEventListener('click', () => {
+      localStorage.removeItem('cham_admin_role');
+      alert('🔒 Đã khóa lại chế độ Quản trị viên.');
+      window.location.href = 'index.html';
+    });
+
+    // Nút Dọn rác dữ liệu thử nghiệm
+    document.getElementById('clearTestDataBtn').addEventListener('click', () => {
+      if (confirm('⚠️ Bạn có chắc chắn muốn làm sạch toàn bộ dữ liệu tin nhắn, nhật ký thử nghiệm trên trình duyệt để chuẩn bị cho đợt can thiệp mới?')) {
+        localStorage.removeItem('CHAM_CHAT_SESSIONS');
+        localStorage.removeItem('CHAM_JOURNAL_ENTRIES');
+        localStorage.removeItem('CHAM_STAT_breathing');
+        localStorage.removeItem('CHAM_STAT_timer');
+        localStorage.removeItem('CHAM_FAN_CLICKS');
+        localStorage.removeItem('cham_user_stats');
+        alert('🧹 Đã dọn dẹp các phiên hoạt động thử nghiệm trên trình duyệt thành công!');
+        loadFirebaseAdminData();
+      }
+    });
+
+    // Quản lý Đăng thông báo toàn trường
+    const broadcastModal = document.getElementById('broadcastModal');
+    const broadcastInput = document.getElementById('broadcastInput');
+    const openBroadcastBtn = document.getElementById('openBroadcastBtn');
+    const closeBroadcastModalBtn = document.getElementById('closeBroadcastModalBtn');
+    const saveBroadcastBtn = document.getElementById('saveBroadcastBtn');
+    const clearBroadcastBtn = document.getElementById('clearBroadcastBtn');
+
+    openBroadcastBtn.addEventListener('click', () => {
+      broadcastInput.value = localStorage.getItem('cham_school_broadcast') || '';
+      broadcastModal.classList.remove('hidden');
+    });
+
+    closeBroadcastModalBtn.addEventListener('click', () => {
+      broadcastModal.classList.add('hidden');
+    });
+
+    saveBroadcastBtn.addEventListener('click', () => {
+      const msg = broadcastInput.value.trim();
+      if (msg) {
+        localStorage.setItem('cham_school_broadcast', msg);
+        alert('📢 Đã lưu & phát thông báo tới tất cả học sinh khi mở Chatbot CHẠM!');
+        broadcastModal.classList.add('hidden');
+      } else {
+        alert('Vui lòng nhập nội dung thông báo.');
+      }
+    });
+
+    clearBroadcastBtn.addEventListener('click', () => {
+      localStorage.removeItem('cham_school_broadcast');
+      broadcastInput.value = '';
+      alert('Đã gỡ bỏ thông báo toàn trường.');
+      broadcastModal.classList.add('hidden');
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
       initCharts();
       loadFirebaseAdminData();
+      checkAdminAccess();
     });
   </script>
+
+  <!-- SECURITY GATE OVERLAY (Chỉ hiện khi chưa nhập 'quanli') -->
+  <div id="adminLockOverlay" class="admin-lock-overlay hidden">
+    <div class="admin-lock-card">
+      <div class="lock-icon-wrap">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <h2>Xác Thực Quyền Quản Trị</h2>
+      <p>Trang này chứa dữ liệu thực nghiệm đề tài nghiên cứu tâm lý học đường. Vui lòng nhập mã quản trị để tiếp tục:</p>
+      
+      <div class="lock-form-wrap">
+        <input type="password" id="adminSecretPass" placeholder="Nhập mã bí mật..." autocomplete="off">
+        <button id="btnSubmitAdminSecret"><i class="fa-solid fa-arrow-right"></i> Mở Khóa</button>
+      </div>
+      <div id="lockPassError" class="lock-error-text hidden">Mã quản trị chưa đúng. Vui lòng thử lại!</div>
+
+      <div style="margin-top: 20px;">
+        <a href="index.html" class="btn-back-link"><i class="fa-solid fa-arrow-left"></i> Quay lại màn hình Chatbot</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ĐĂNG THÔNG BÁO TOÀN TRƯỜNG -->
+  <div id="broadcastModal" class="modal-backdrop hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <i class="fa-solid fa-bullhorn accent-orange"></i>
+          <h3>Đăng Thông Báo Toàn Trường Đến Học Sinh</h3>
+        </div>
+        <button class="icon-btn" id="closeBroadcastModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">Thông điệp này sẽ xuất hiện trên đầu khung chat của tất cả học sinh khi mở Chatbot CHẠM.</p>
+        <textarea id="broadcastInput" style="width:100%; height:90px; border-radius:8px; border:1px solid var(--border-light); padding:10px; font-family:inherit; font-size:13px;" placeholder="Ví dụ: Tuần này thi giữa kỳ, các bạn hãy nhớ kỹ thuật thở 4-7-8 và ngủ đủ giấc nhé!"></textarea>
+      </div>
+      <div class="modal-footer" style="display:flex; justify-content:flex-end; gap:10px; padding:12px 20px;">
+        <button class="btn btn-secondary" id="clearBroadcastBtn" style="padding:6px 14px; font-size:12px;">Xóa Thông Báo</button>
+        <button class="btn btn-primary" id="saveBroadcastBtn" style="padding:6px 16px; font-size:12px; background:var(--sage-600); color:#FFF; border:none; border-radius:6px; font-weight:700;"><i class="fa-solid fa-paper-plane"></i> Lưu & Phát Thông Báo</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
