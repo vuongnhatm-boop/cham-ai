@@ -288,29 +288,51 @@
 
   // Lưu một bài Nhật ký Tự trắc ẩn (Self-Compassion Journal)
   async function saveJournalEntry(eventText, commonHumanityText, selfKindnessText) {
-    if (!db) throw new Error('Chưa kết nối được với cơ sở dữ liệu đám mây');
-    const targetUid = currentUser ? currentUser.uid : sessionId;
-
+    const entryId = 'journal_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
     const entry = {
+      id: entryId,
       event: eventText,
       commonHumanity: commonHumanityText,
       selfKindness: selfKindnessText,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      createdAtClient: Date.now(),
       clientDate: new Date().toLocaleDateString('vi-VN', {
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
       })
     };
 
-    if (currentUser) {
-      await db.collection('users')
-        .doc(currentUser.uid)
-        .collection('journals')
-        .add(entry);
-    } else {
-      await db.collection('conversations')
-        .doc(sessionId)
-        .collection('journals')
-        .add(entry);
+    // 1. Luôn lưu vào LocalStorage trước (0ms, an toàn tuyệt đối không bao giờ mất)
+    try {
+      let localJournals = JSON.parse(localStorage.getItem('CHAM_JOURNAL_ENTRIES') || '[]');
+      localJournals.unshift(entry);
+      if (localJournals.length > 50) localJournals = localJournals.slice(0, 50);
+      localStorage.setItem('CHAM_JOURNAL_ENTRIES', JSON.stringify(localJournals));
+    } catch (e) {
+      console.warn('Lỗi lưu LocalStorage nhật ký:', e);
+    }
+
+    // 2. Đồng bộ lên Firebase Firestore nếu khả dụng
+    if (db) {
+      try {
+        const firestoreEntry = {
+          ...entry,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        if (currentUser) {
+          await db.collection('users')
+            .doc(currentUser.uid)
+            .collection('journals')
+            .doc(entryId)
+            .set(firestoreEntry);
+        } else {
+          await db.collection('conversations')
+            .doc(sessionId)
+            .collection('journals')
+            .doc(entryId)
+            .set(firestoreEntry);
+        }
+      } catch (err) {
+        console.warn('Lỗi đồng bộ Firestore nhật ký:', err.message);
+      }
     }
 
     logEvent('save_journal_entry');
@@ -319,22 +341,38 @@
 
   // Lấy danh sách các bài Nhật ký Tự trắc ẩn của người dùng
   async function getJournalEntries() {
-    if (!db) return [];
+    let localList = [];
+    try {
+      localList = JSON.parse(localStorage.getItem('CHAM_JOURNAL_ENTRIES') || '[]');
+    } catch (e) { localList = []; }
+
+    if (!db) return localList;
+
     try {
       const colRef = currentUser 
         ? db.collection('users').doc(currentUser.uid).collection('journals')
         : db.collection('conversations').doc(sessionId).collection('journals');
 
       const snapshot = await colRef.orderBy('createdAt', 'desc').limit(50).get();
-      const list = [];
-      snapshot.forEach(doc => {
-        list.push({ id: doc.id, ...doc.data() });
-      });
-      return list;
+      if (!snapshot.empty) {
+        const cloudList = [];
+        snapshot.forEach(doc => {
+          cloudList.push({ id: doc.id, ...doc.data() });
+        });
+        // Hợp nhất dữ liệu
+        const map = new Map();
+        cloudList.forEach(item => map.set(item.id, item));
+        localList.forEach(item => {
+          if (!map.has(item.id)) map.set(item.id, item);
+        });
+        const merged = Array.from(map.values());
+        localStorage.setItem('CHAM_JOURNAL_ENTRIES', JSON.stringify(merged));
+        return merged;
+      }
     } catch (err) {
-      console.warn('Lỗi lấy bài nhật ký:', err.message);
-      return [];
+      console.warn('Lỗi lấy bài nhật ký Firestore (sử dụng dữ liệu cục bộ):', err.message);
     }
+    return localList;
   }
 
   // Cập nhật thống kê rèn luyện cá nhân
@@ -365,6 +403,142 @@
     };
   }
 
+  // Lưu phiên hội thoại hoàn chỉnh lên Cloud Firestore & LocalStorage
+  async function saveConversationSession(sessionData) {
+    if (!sessionData || !sessionData.id) return;
+
+    // 1. Lưu LocalStorage trước (tốc độ tức thì)
+    try {
+      let sessions = JSON.parse(localStorage.getItem('CHAM_CHAT_SESSIONS') || '[]');
+      const existingIdx = sessions.findIndex(s => s.id === sessionData.id);
+      if (existingIdx >= 0) {
+        sessions[existingIdx] = { ...sessions[existingIdx], ...sessionData, updatedAt: Date.now() };
+      } else {
+        sessions.unshift({ ...sessionData, updatedAt: Date.now(), createdAt: Date.now() });
+      }
+      if (sessions.length > 50) sessions = sessions.slice(0, 50);
+      localStorage.setItem('CHAM_CHAT_SESSIONS', JSON.stringify(sessions));
+    } catch (e) {
+      console.warn('Lỗi lưu LocalStorage:', e);
+    }
+
+    // 2. Lưu đồng bộ lên Firebase Cloud Firestore
+    if (!db) return;
+    try {
+      const docPayload = {
+        id: sessionData.id,
+        title: sessionData.title || 'Cuộc trò chuyện mới',
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        clientUpdatedAt: new Date().toISOString(),
+        messageCount: (sessionData.messages || []).length,
+        messages: (sessionData.messages || []).slice(-40),
+        lastMessage: sessionData.messages && sessionData.messages.length > 0 
+          ? (sessionData.messages[sessionData.messages.length - 1].rawContent || '').substring(0, 100)
+          : ''
+      };
+
+      if (currentUser) {
+        await db.collection('users')
+          .doc(currentUser.uid)
+          .collection('conversations')
+          .doc(sessionData.id)
+          .set(docPayload, { merge: true });
+
+        await db.collection('users').doc(currentUser.uid).set({
+          lastActive: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+      } else {
+        await db.collection('conversations')
+          .doc(sessionData.id)
+          .set(docPayload, { merge: true });
+      }
+    } catch (err) {
+      console.warn('Lỗi đồng bộ Cloud Firestore conversation:', err.message);
+    }
+  }
+
+  // Tải danh sách tất cả các phiên trò chuyện
+  async function getConversationSessions() {
+    let localSessions = [];
+    try {
+      localSessions = JSON.parse(localStorage.getItem('CHAM_CHAT_SESSIONS') || '[]');
+    } catch (e) { localSessions = []; }
+
+    if (!db || !currentUser) {
+      return localSessions;
+    }
+
+    try {
+      const snapshot = await db.collection('users')
+        .doc(currentUser.uid)
+        .collection('conversations')
+        .orderBy('updatedAt', 'desc')
+        .limit(30)
+        .get();
+
+      if (!snapshot.empty) {
+        const cloudSessions = [];
+        snapshot.forEach(doc => {
+          cloudSessions.push(doc.data());
+        });
+
+        // Hợp nhất dữ liệu Cloud và Local
+        const mergedMap = new Map();
+        cloudSessions.forEach(s => mergedMap.set(s.id, s));
+        localSessions.forEach(s => {
+          if (!mergedMap.has(s.id)) mergedMap.set(s.id, s);
+        });
+
+        const mergedList = Array.from(mergedMap.values());
+        localStorage.setItem('CHAM_CHAT_SESSIONS', JSON.stringify(mergedList));
+        return mergedList;
+      }
+    } catch (err) {
+      console.warn('Lỗi tải danh sách phiên từ Cloud:', err.message);
+    }
+    return localSessions;
+  }
+
+  // Xóa một phiên trò chuyện
+  async function deleteConversationSession(sessionId) {
+    try {
+      let sessions = JSON.parse(localStorage.getItem('CHAM_CHAT_SESSIONS') || '[]');
+      sessions = sessions.filter(s => s.id !== sessionId);
+      localStorage.setItem('CHAM_CHAT_SESSIONS', JSON.stringify(sessions));
+    } catch (e) {}
+
+    if (db) {
+      try {
+        if (currentUser) {
+          await db.collection('users')
+            .doc(currentUser.uid)
+            .collection('conversations')
+            .doc(sessionId)
+            .delete();
+        } else {
+          await db.collection('conversations').doc(sessionId).delete();
+        }
+      } catch (err) {
+        console.warn('Lỗi xóa conversation trên Firebase:', err.message);
+      }
+    }
+  }
+
+  // Xóa toàn bộ lịch sử trò chuyện
+  async function clearAllConversationSessions() {
+    localStorage.removeItem('CHAM_CHAT_SESSIONS');
+    if (db && currentUser) {
+      try {
+        const snap = await db.collection('users').doc(currentUser.uid).collection('conversations').get();
+        const batch = db.batch();
+        snap.forEach(doc => batch.delete(doc.ref));
+        await batch.commit();
+      } catch (e) {
+        console.warn('Lỗi xóa toàn bộ trên Firebase:', e);
+      }
+    }
+  }
+
   // Đối tượng quản trị toàn cục
   window.chamFirebase = {
     isReady: () => isFirebaseReady,
@@ -381,22 +555,64 @@
     logEvent,
     saveChatMessage,
     loadUserChatHistory,
+    saveConversationSession,
+    getConversationSessions,
+    deleteConversationSession,
+    clearAllConversationSessions,
     saveJournalEntry,
     getJournalEntries,
     recordUserStat,
-    getLocalStats
+    getLocalStats,
+    checkFirestoreStatus
   };
 
+  // Kiểm tra tính sẵn sàng của Cloud Firestore
+  async function checkFirestoreStatus() {
+    if (!db) return { ok: false, error: 'Chưa nạp thư viện Firestore' };
+    try {
+      await db.collection('_health').doc('ping').get();
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: err.message, code: err.code };
+    }
+  }
+
   // Cập nhật trạng thái hiển thị máy chủ ban đầu
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     const firebasePill = document.getElementById('firebaseStatusPill');
     const firebaseText = document.getElementById('firebaseStatusText');
-    if (firebasePill && firebaseText) {
-      if (isFirebaseReady) {
-        firebaseText.textContent = 'Firebase: ai-cham';
-        firebasePill.title = 'Máy chủ Firebase Cloud (ai-cham) đã kết nối: Xác thực tài khoản & Cloud Firestore sẵn sàng.';
-        firebasePill.classList.add('online');
-      }
+    const historySyncIndicator = document.getElementById('historySyncIndicator');
+    const historySyncText = document.getElementById('historySyncText');
+
+    if (db) {
+      try {
+        const check = await checkFirestoreStatus();
+        if (check.ok) {
+          if (firebaseText) firebaseText.textContent = 'Firebase: ai-cham';
+          if (firebasePill) {
+            firebasePill.classList.add('online');
+            firebasePill.title = 'Máy chủ Firebase Cloud (ai-cham) đang lưu trữ hoàn hảo.';
+          }
+          if (historySyncText) historySyncText.textContent = 'Cloud Firestore (Online)';
+          if (historySyncIndicator) historySyncIndicator.style.color = '#059669';
+        } else {
+          console.warn('⚠️ Cloud Firestore chưa được kích hoạt trên Firebase Console:', check.error);
+          if (firebaseText) firebaseText.textContent = 'Firebase: Cần bật Firestore';
+          if (firebasePill) {
+            firebasePill.classList.remove('online');
+            firebasePill.title = 'Nhấp vào đây để mở Firebase Console bật Cloud Firestore Database.';
+            firebasePill.style.cursor = 'pointer';
+            firebasePill.onclick = () => window.open('https://console.firebase.google.com/project/ai-cham/firestore', '_blank');
+          }
+          if (historySyncText) historySyncText.textContent = 'Cần bật Firestore';
+          if (historySyncIndicator) {
+            historySyncIndicator.style.color = '#D97706';
+            historySyncIndicator.title = 'Nhấp vào đây để mở Firebase Console bật Cloud Firestore Database';
+            historySyncIndicator.style.cursor = 'pointer';
+            historySyncIndicator.onclick = () => window.open('https://console.firebase.google.com/project/ai-cham/firestore', '_blank');
+          }
+        }
+      } catch (e) {}
     }
 
     logEvent('app_opened', { user_agent: navigator.userAgent });
